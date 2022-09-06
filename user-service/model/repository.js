@@ -38,7 +38,7 @@ export async function createUser(params) {
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(pw, salt);
 
-  const newUser = await userModel.create({
+  let newUser = await userModel.create({
     username: username,
     password: hash,
   });
@@ -50,9 +50,8 @@ export async function createUser(params) {
         expiresIn: "2h",
       }
     );
+  newUser = newUser.toObject()
   newUser.token = token
-  newUser.save()
-  
   return newUser
 }
 
@@ -62,7 +61,7 @@ export async function loginUser(params) {
   if (username.length < 5) {
     throw 'Please enter a valid username!'
   }
-  const user = await userModel.findOne({username: username})
+  let user = await userModel.findOne({username: username})
   if (user == null) {
     throw "No such user found!"
   }
@@ -75,14 +74,15 @@ export async function loginUser(params) {
         expiresIn: "2h",
       }
     );
-    const updatedUser = await userModel.findOneAndUpdate({_id: user._id}, {$set: {token: token}})
-    console.log(updatedUser)
-    return updatedUser
+    console.log(token)
+    user = user.toObject()
+    user['token'] = token
+    
+    return user
   } else {
      throw 'Invalid password!'
   }
 }
-
 
 export async function updatePassword(params) {
   const username = params.username

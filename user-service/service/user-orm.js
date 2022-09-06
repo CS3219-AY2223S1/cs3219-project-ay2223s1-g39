@@ -5,6 +5,7 @@ export async function ormCreateUser(username, password) {
     try {
         const newUser = await createUser({username: username, password: password});
         // newUser.save();
+        console.log(newUser)
         return newUser;
     } catch (err) {
         return { err: err };
