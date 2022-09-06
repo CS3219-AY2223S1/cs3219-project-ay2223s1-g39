@@ -36,7 +36,8 @@ export async function login(req, res) {
 export async function updatePassword(req, res) {
     try {
         const {username, oldPassword, newPassword } = req.body
-        const resp = await _updatePassword(username, oldPassword, newPassword)
+        const uid = req.user
+        const resp = await _updatePassword(uid, username, oldPassword, newPassword)
         if (resp.err) {
             return res.status(400).json({message: resp.err});
         }
@@ -49,7 +50,8 @@ export async function updatePassword(req, res) {
 export async function deleteUser(req, res) {
     try {
         const {username, password} = req.body;
-        const resp = await _deleteUser(username, password)
+        const uid = req.user
+        const resp = await _deleteUser(uid, username, password)
         if (resp.err) {
             return res.status(400).json({message: resp.err});
         }
