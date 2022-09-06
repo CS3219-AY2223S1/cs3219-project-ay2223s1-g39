@@ -55,6 +55,6 @@ export async function deleteUser(req, res) {
         }
         return res.status(200).json({message: "User deleted successfully!", user: resp})
     } catch (err) {
-        return res.status(500).json({message: 'Database failure when updating password!'})
+        return res.status(500).json({message: 'Database failure when deleting user!'})
     }
 }

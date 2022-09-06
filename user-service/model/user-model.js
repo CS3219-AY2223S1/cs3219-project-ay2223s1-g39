@@ -16,10 +16,6 @@ let UserModelSchema = new Schema({
         required: true,
         default: Date.now
     },
-    token: {
-        type: String,
-        required: false
-    }
 })
 
 export default mongoose.model('UserModel', UserModelSchema)
