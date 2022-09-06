@@ -10,6 +10,15 @@ let UserModelSchema = new Schema({
     password: {
         type: String,
         required: true,
+    },
+    createdAt: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    token: {
+        type: String,
+        required: false
     }
 })
 
