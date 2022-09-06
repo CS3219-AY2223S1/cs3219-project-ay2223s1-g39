@@ -21,18 +21,18 @@ export async function ormLogin(username, password) {
     }
 }
 
-export async function ormUpdatePassword(username, oldPassword, newPassword) {
+export async function ormUpdatePassword(uid, username, oldPassword, newPassword) {
     try {
-        const user = await updatePassword({username: username, oldPassword: oldPassword, newPassword: newPassword})
+        const user = await updatePassword({uid, username: username, oldPassword: oldPassword, newPassword: newPassword})
         return user
     } catch (err) {
         return {err: err}
     }
 }
 
-export async function ormDeleteUser(username, password) {
+export async function ormDeleteUser(uid, username, password) {
     try {
-        const user = await deleteUser({username: username, password: password})
+        const user = await deleteUser({uid: uid, username: username, password: password})
         return user
     } catch (err) {
         return {err: err}

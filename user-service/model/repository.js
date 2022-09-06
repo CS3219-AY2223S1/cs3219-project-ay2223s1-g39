@@ -85,13 +85,15 @@ export async function loginUser(params) {
 }
 
 export async function updatePassword(params) {
+  const uid = params.uid
+  console.log(uid)
   const username = params.username
   const opw = params.oldPassword
   const npw = params.newPassword
   if (username.length < 5) {
     throw 'Please enter a valid username!'
   }
-  const user = await userModel.findOne({username: username})
+  const user = await userModel.findOne({_id: uid})
   if (user == null) {
     throw "No such user found!"
   }
@@ -104,8 +106,7 @@ export async function updatePassword(params) {
     var salt = bcrypt.genSaltSync(10);
     var hash = bcrypt.hashSync(npw, salt);
 
-    const updatedUser = await userModel.findOneAndUpdate({_id: user._id}, {$set: {password: hash}})
-    console.log(updatedUser)
+    const updatedUser = await userModel.findOneAndUpdate({_id: uid}, {$set: {password: hash}})
     return updatedUser;
   } else {
      throw 'Wrong password!'
@@ -114,12 +115,13 @@ export async function updatePassword(params) {
 
 
 export async function deleteUser(params) {
+  const uid = params.uid
   const username = params.username
   const pw = params.password
    if (username.length < 5) {
     throw 'Please enter a valid username!'
   }
-  const user = await userModel.findOne({username: username})
+  const user = await userModel.findOne({_id: uid})
   if (user == null) {
     throw "No such user found!"
   }
