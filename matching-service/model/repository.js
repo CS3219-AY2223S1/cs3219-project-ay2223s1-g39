@@ -1,0 +1,47 @@
+import matchModel from './match-model.js';
+import 'dotenv/config'
+//Set up mongoose connection
+import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken'
+
+let mongoDB = process.env.ENV == "PROD" ? process.env.DB_CLOUD_URI : process.env.DB_LOCAL_URI;
+
+mongoose.connect(mongoDB, { useNewUrlParser: true , useUnifiedTopology: true});
+
+let db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once("open", function () {
+  console.log("Connected successfully");
+});
+
+export async function createMatch(params) {
+  const userOne = params.userOne
+  const userTwo = params.userTwo
+  const difficulty = params.difficulty
+  const question = params.question
+
+  let newModel = await matchModel.create({
+    userOne: userOne,
+    userTwo: userTwo,
+    difficulty: difficulty,
+    question: question,
+  });
+  
+  const token = jwt.sign(
+      { room_id: newModel._id },
+      process.env.TOKEN_KEY,
+      {
+        expiresIn: "2h",
+      }
+    );
+  newModel = newModel.toObject()
+  newModel.token = token
+  return newModel
+}
+
+
+export async function deleteMatch(params) {
+  const roomid = params.roomid
+  const updatedUser = await matchModel.findOneAndDelete({_id: roomid})
+  return updatedUser
+}
