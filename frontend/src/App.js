@@ -1,5 +1,7 @@
 import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
+import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage';
+import MatchingPage from './components/MatchingPage';
 import HomePage from './components/HomePage';
 import {Box} from "@mui/material";
 
@@ -11,7 +13,9 @@ function App() {
                 <Router>
                     <Routes>
                         <Route exact path="/" element={<Navigate replace to="/signup" />}></Route>
+                        <Route path="/login" element={<LoginPage/>}/>
                         <Route path="/signup" element={<SignupPage/>}/>
+                        <Route path='/matching' element={<MatchingPage/>}/>
                         <Route path="/home" element={<HomePage/>}/>
                     </Routes>
                 </Router>
