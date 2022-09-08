@@ -17,11 +17,7 @@ router.post('/login', login)
 router.put('/update-password', verifyToken, updatePassword)
 router.delete('/delete', verifyToken, deleteUser)
  
-app.get("/health-check", (req, res) => {
-    res.json({
-        status:"ok",
-    });
-});
+
 
 app.use('/api/user', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
