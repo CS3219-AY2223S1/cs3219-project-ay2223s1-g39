@@ -27,15 +27,6 @@ export async function createMatch(params) {
     question: question,
   });
 
-  const token = jwt.sign(
-      { room_id: newModel._id },
-      process.env.TOKEN_KEY,
-      {
-        expiresIn: "2h",
-      }
-    );
-  newModel = newModel.toObject()
-  newModel.token = token
   return newModel
 }
 
