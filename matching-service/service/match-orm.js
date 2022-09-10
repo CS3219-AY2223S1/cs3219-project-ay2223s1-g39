@@ -1,15 +1,22 @@
-import { createMatch, deleteMatch } from '../model/repository.js';
+import { createMatch, deleteMatch, updateMatch } from '../model/repository.js';
 
 //need to separate orm functions from repository to decouple business logic from persistence
 export async function ormCreateMatch(userOne, userTwo, difficulty, question) {
     try {
         const newMatch = await createMatch({userOne: userOne, userTwo: userTwo, difficulty: difficulty, question: question});
-        console.log(newMatch)
         return newMatch;
     } catch (err) {
-        console.log(err);
         return { err: err };
     }
+}
+
+export async function ormUpdateMatch(roomId, updatedRoomInfo) {
+  try {
+      const updatedMatch = await updateMatch(roomId, {...updatedRoomInfo});
+      return updatedMatch;
+  } catch (err) {
+      return {err: err}
+  }
 }
 
 export async function ormDeleteMatch(roomid) {
