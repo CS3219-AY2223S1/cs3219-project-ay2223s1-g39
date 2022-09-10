@@ -7,6 +7,7 @@ export async function ormCreateMatch(userOne, userTwo, difficulty, question) {
         console.log(newMatch)
         return newMatch;
     } catch (err) {
+        console.log(err);
         return { err: err };
     }
 }
