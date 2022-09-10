@@ -5,7 +5,6 @@ import MatchingPage from './MatchingPage';
 import {
   Button,
 } from "@mui/material";
-import { alignProperty } from '@mui/material/styles/cssUtils';
 
 const useStyles = createUseStyles({
   difficultyButton: {
@@ -49,7 +48,7 @@ const HomePage = (props) => {
   const classes = useStyles();
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   const [user, setUser] = useState(props.user || 'User'); // To change to just utilise props.user
-  const [partnerSocket, setParterSocket] = useState('');
+  const [partnerSocket, setPartnerSocket] = useState('');
   const [difficulties, setDifficulties] = useState(["Easy", "Medium", "Hard"]);
   const [status, setStatus] = useState("idle");
   const [roomId, setRoomId] = useState('');
@@ -77,7 +76,7 @@ const HomePage = (props) => {
 
   socket.on("matchSuccess", (data) => {
     setRoomId(data.roomId);
-    setParterSocket(data.socketId);
+    setPartnerSocket(data.socketId);
     setStatus("in-room");
     clearTimeout();
   })
