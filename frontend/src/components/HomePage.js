@@ -47,11 +47,12 @@ const socket = io.connect("http://localhost:8001");
 
 const HomePage = (props) => {
   const classes = useStyles();
-  const [firstPlayer, setFirstPlayer] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
-  const [user, setUser] = useState('User'); // To change to just utilise props.user
+  const [user, setUser] = useState(props.user || 'User'); // To change to just utilise props.user
+  const [partnerSocket, setParterSocket] = useState('');
   const [difficulties, setDifficulties] = useState(["Easy", "Medium", "Hard"]);
-  const [isWaiting, setIsWaiting] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [roomId, setRoomId] = useState('');
 
   const handleDifficultySelection = (difficulty) => {
     setSelectedDifficulty(difficulty);
@@ -59,19 +60,30 @@ const HomePage = (props) => {
 
   const handleMatchFailure = () => {
     setSelectedDifficulty('');
-    setIsWaiting(false);
+    setStatus("idle");
+    //alert("No compatible match found. Try again later!");
   }
 
   const handleCreateMatch = () => {
-    console.log("Creating Match detected!");
-    setFirstPlayer(true);
-    const playerName = user;
-    socket.emit("createMatch", {userOne: playerName, difficulty: selectedDifficulty}); // Emit event createGame
+    if (selectedDifficulty) {
+      socket.emit("createPendingMatch", {username: user, difficulty: selectedDifficulty});
+    }
   }
 
-  socket.on("pendingMatch", (data) => {
-    setIsWaiting(true);
-    setTimeout(handleMatchFailure, 30000);
+  socket.on("createRoom", (data) => {
+    setStatus("waiting");
+    socket.emit('room', {room_id: data.roomId});
+  })
+
+  socket.on("matchSuccess", (data) => {
+    setRoomId(data.roomId);
+    setParterSocket(data.socketId);
+    setStatus("in-room");
+    clearTimeout();
+  })
+
+  socket.on("matchFailure", (data) => {
+    handleMatchFailure();
   })
 
   const SelectionBox = (props) => {
@@ -84,9 +96,13 @@ const HomePage = (props) => {
     )
   }
 
-  if (isWaiting) {
+  if (status === 'waiting') {
     return (
       <MatchingPage />
+    )
+  } else if (status === 'in-room') { 
+    return (
+      <h1> {`Connected to Room ${roomId}, but this page has yet to be implemented :(`}</h1>
     )
   } else {
     return (
@@ -99,7 +115,7 @@ const HomePage = (props) => {
           {difficulties.map((difficulty) => <SelectionBox key={difficulty} difficulty={difficulty} />)}
         </div>
         <br/>
-        <Button className={`${classes.findMatchBtn}`} variant={"contained"} size={"large"} onClick={handleCreateMatch}>Create me a match!</Button>
+        <Button className={`${classes.findMatchBtn}`} variant={"contained"} size={"large"} onClick={handleCreateMatch}>Find me a match!</Button>
       </div>
     )
   }
