@@ -112,7 +112,8 @@ const SessionPage = () => {
           padding={15}
           style={{
             fontSize: 15,
-            minHeight: 600,
+            overflow: "scroll",
+            minHeight: 550,
             borderRadius: "10px",
             backgroundColor: "#f9f9f9",
             color: "#384547",
