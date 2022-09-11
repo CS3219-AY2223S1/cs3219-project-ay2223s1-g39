@@ -73,6 +73,8 @@ const SessionPage = () => {
             padding: "10px",
             backgroundColor: "blanchedalmond",
             borderRadius: "10px",
+            maxHeight: "60vh",
+            overflow: "scroll",
           }}
         >
           <p>
@@ -104,25 +106,33 @@ const SessionPage = () => {
             <MenuItem value="cpp">C++</MenuItem>
           </Select>
         </div>
-        <CodeEditor
-          value={code}
-          language={language}
-          placeholder="Type your code here!"
-          onChange={(e) => setCode(e.target.value)}
-          padding={15}
+        <div
+          class="text-area"
           style={{
-            fontSize: 15,
-            overflow: "scroll",
-            minHeight: 550,
+            maxHeight: "72vh",
+            overflowY: "scroll",
             borderRadius: "10px",
-            backgroundColor: "#f9f9f9",
-            color: "#384547",
-            lineHeight: "1.5",
-            fontWeight: "bold",
-            fontFamily:
-              "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
           }}
-        />
+        >
+          <CodeEditor
+            value={code}
+            language={language}
+            placeholder="Type your code here!"
+            onChange={(e) => setCode(e.target.value)}
+            padding={15}
+            style={{
+              fontSize: 14,
+              minHeight: "65vh",
+              overflow: "scroll",
+              backgroundColor: "#f9f9f9",
+              color: "#384547",
+              lineHeight: "1.5",
+              fontWeight: "bold",
+              fontFamily:
+                "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
+            }}
+          />
+        </div>
       </div>
     </div>
   );
