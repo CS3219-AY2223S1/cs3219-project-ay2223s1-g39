@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 var Schema = mongoose.Schema
 let QuestionModelSchema = new Schema({
-    difficult: {
+    difficulty: {
         type: String,
         required: true
     }, 

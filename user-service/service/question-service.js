@@ -18,7 +18,7 @@ export async function getQuestion(params) {
 
 export async function getQuestionsByDifficulty(params) {
     const difficulty = params.difficulty;
-    let questions = await questionModel.findWhere((question) => question.difficulty == difficulty);
+    let questions = await questionModel.find({difficulty: difficulty})
     return questions;
 }
 
