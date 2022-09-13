@@ -14,7 +14,7 @@ export async function createQuestion(req, res) {
             return res.status(400).json({message: 'Difficulty and/or question is missing!'});
         }
     } catch (err) {
-        return res.status(500).json({message: 'Database failure when creating new user!'})
+        return res.status(500).json({message: 'Database failure when creating new question!'})
     }
 }
 
@@ -28,7 +28,7 @@ export async function getQuestion(req, res) {
         return res.status(200).json({message: 'Got question successfully', question: resp});
 
     } catch (err) {
-        return res.status(500).json({message: 'Database failure when deleting user!'})
+        return res.status(500).json({message: 'Database failure when getting question!'})
     }
 }
 
@@ -41,6 +41,6 @@ export async function getQuestionsByDifficulty(req, res) {
         }
         return res.status(200).json({message: 'Got question successfully', question: resp});
     } catch (err) {
-        return res.status(500).json({message: 'Database failure when deleting user!'})
+        return res.status(500).json({message: 'Database failure when getting questions!'})
     }
 }
