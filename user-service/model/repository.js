@@ -1,9 +1,10 @@
-import userModel from './user-model.js';
+import userModel from './user/user-model.js';
 import 'dotenv/config'
 import bcrypt from 'bcryptjs';
-//Set up mongoose connection
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken'
+
+//Set up mongoose connection
 
 let mongoDB = process.env.ENV == "PROD" ? process.env.DB_CLOUD_URI : process.env.DB_LOCAL_URI;
 
@@ -95,7 +96,7 @@ export async function updatePassword(params) {
   }
   const user = await userModel.findOne({_id: uid})
   if (user == null) {
-    throw "No such user found!"
+    throw "No such user found or JWT expired!"
   }
   if (opw.length < 5) {
     throw 'Please enter a valid password'
@@ -123,7 +124,7 @@ export async function deleteUser(params) {
   }
   const user = await userModel.findOne({_id: uid})
   if (user == null) {
-    throw "No such user found!"
+    throw "No such user found or JWT expired!"
   }
   if (pw.length < 5) {
     throw 'Please enter a valid password'

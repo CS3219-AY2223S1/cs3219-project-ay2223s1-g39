@@ -18,6 +18,12 @@ router.put('/update-password', verifyToken, updatePassword)
 router.delete('/delete', verifyToken, deleteUser)
  
 
+// APIs related to questions
+import {createQuestion, getQuestion, getQuestionsByDifficulty } from './controller/question-controller.js';
+router.post('/question/create', verifyToken, createQuestion)
+router.get('/question/:id', verifyToken, getQuestion)
+router.get('/question/difficulty:difficulty', verifyToken, getQuestionsByDifficulty)
+
 
 app.use('/api/user', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
