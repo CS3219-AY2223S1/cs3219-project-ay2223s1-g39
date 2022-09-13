@@ -21,7 +21,8 @@ export async function ormGetQuestion(id) {
 
 export async function ormGetQuestionsByDifficulty(difficulty) {
     try {
-        const question = await getQuestionsByDifficulty({difficulty: difficulty});
+        const questions = await getQuestionsByDifficulty({difficulty: difficulty});
+        return questions
     } catch (err) {
         return {err: err}
     }

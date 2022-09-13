@@ -1,7 +1,7 @@
 import userModel from '../model/user/user-model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
-    
+
 export async function createUser(params) {
   const username = params.username
   const pw = params.password
@@ -43,14 +43,12 @@ export async function createUser(params) {
 }
 
 export async function loginUser(params) {
-  console.log('logging in!');
   const username = params.username;
   const pw = params.password;
   if (username.length < 5) {
     throw 'Please enter a valid username!'
   }
   let user = await userModel.findOne({username: username})
-  console.log('logging in2!');``
   if (user == null) {
     throw "No such user found!"
   }
