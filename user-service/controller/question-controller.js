@@ -3,9 +3,10 @@ import { ormCreateQuestion as _createQuestion, ormGetQuestion as _getQuestion, o
 export async function createQuestion(req, res) {
     try {
         
-        const { difficulty, question } = req.body;
-        if (difficulty && question) {
-            const resp = await _createQuestion(difficulty, question);
+        const { difficulty, title, question, examples, constraints } = req.body;
+        if (difficulty && question && title) {
+            console.log(constraints)
+            const resp = await _createQuestion(difficulty, title, question, examples, constraints);
             if (resp.err) {
                 return res.status(400).json({message: resp.err});
             } else {

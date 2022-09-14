@@ -1,9 +1,10 @@
 import { createQuestion, getQuestion, getQuestionsByDifficulty } from '../../service/question-service.js';
 
 //need to separate orm functions from repository to decouple business logic from persistence
-export async function ormCreateQuestion(difficulty, question) {
+export async function ormCreateQuestion(difficulty, title, question, examples, constraints) {
     try {
-        const newQuestion = await createQuestion({difficulty: difficulty, question: question});
+        console.log(constraints);
+        const newQuestion = await createQuestion({difficulty: difficulty, title: title, question: question, examples: examples, constraints: constraints});
         return newQuestion;
     } catch (err) {
         return { err: err };
