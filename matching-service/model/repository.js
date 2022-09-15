@@ -25,7 +25,15 @@ export async function createMatch(params) {
     question: question,
   });
 
-  return newModel
+  return newModel;
+}
+
+export async function updateMatch(model_id, params) {
+  let updatedModel = await matchModel.findOneAndUpdate(model_id, {
+    ...params
+  })
+
+  return updatedModel;
 }
 
 
