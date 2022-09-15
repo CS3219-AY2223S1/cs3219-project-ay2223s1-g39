@@ -102,7 +102,9 @@ const LoginPage = () => {
             <DialogActions>
               {isLoginSuccess ? (
                 <Button component={Link} to="/home">
-                  Proceed to await match!
+                  <p style={{ fontWeight: "bold" }}>
+                    Proceed to await match!
+                  </p>
                 </Button>
               ) : (
                 <Button component={Link} to="/signup">
