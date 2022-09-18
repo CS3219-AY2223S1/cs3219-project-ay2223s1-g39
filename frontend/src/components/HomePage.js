@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { io } from 'socket.io-client';
-import MatchingPage from './MatchingPage';
+import { Navigate } from 'react-router-dom';
 import {
   Button,
 } from "@mui/material";
+import MatchingPage from './MatchingPage';
 
 const useStyles = createUseStyles({
   difficultyButton: {
@@ -101,7 +102,7 @@ const HomePage = (props) => {
     )
   } else if (status === 'in-room') { 
     return (
-      <h1> {`Connected to Room ${roomId}, but this page has yet to be implemented :(`}</h1>
+      <Navigate to='/session' />
     )
   } else {
     return (
