@@ -3,20 +3,22 @@ import cors from 'cors';
 import 'dotenv/config'
 import mongoose from 'mongoose';
 import {createQuestion, getQuestion, getQuestionsByDifficulty } from './controller/question-controller.js';
+import {verifyToken} from './middleware/auth.js';
 
 const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cors()) // config cors so that front-end can use
 app.options('*', cors())
+const router = express.Router()
 
 // APIs related to questions
-router.post('/question/create', verifyToken, createQuestion)
-router.get('/question/', verifyToken, getQuestion)
-router.get('/question/difficulty', verifyToken, getQuestionsByDifficulty)
+router.post('/create', verifyToken, createQuestion)
+router.get('/', verifyToken, getQuestion)
+router.get('/difficulty', verifyToken, getQuestionsByDifficulty)
 
 
-app.use('/questions', router).all((_, res) => {
+app.use('/api/question', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
 })

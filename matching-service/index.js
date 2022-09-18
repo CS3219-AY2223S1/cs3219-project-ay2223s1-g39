@@ -1,7 +1,9 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import axios from 'axios';
 import { ormCreateMatch as createMatch, ormDeleteMatch as deleteMatch, ormUpdateMatch as updateMatch} from './service/match-orm.js'
 
 const app = express();
@@ -32,61 +34,87 @@ app.use('/api/match', router).all((_, res) => {
 })
 
 let rooms = {
-  Easy: {
+  easy: {
     waitingUser: null,
     waitingRoomSocket: null,
-    waitingRoom: null,
+    question: null,
     matchFailure: null
+    
   },
-  Medium: {
+  medium: {
     waitingUser: null,
     waitingRoomSocket: null,
-    waitingRoom: null,
+    question: null,
     matchFailure: null
   }, 
-  Hard: {
+  hard: {
     waitingUser: null,
     waitingRoomSocket: null,
-    waitingRoom: null,
+    question: null,
     matchFailure: null
   }
 };
 
+async function generateQuestionforRoom(token, difficulty, room) {
+  const params = {
+    token: token,
+    difficulty: difficulty
+  }
+
+  return axios.get(`${process.env.URL_QUESTION_SVC}/difficulty`, {params})
+    .then((res) => res.data.question)
+    .then((questions) => questions[Math.floor(Math.random(questions.length))])
+    .then((question) => (room.question = question))
+    .catch((err) => console.log(err));
+}
+
 const alertMatchFailure = (rooms, difficulty) => {
   const room = rooms[difficulty]
+  
   rooms[difficulty] = {
     waitingUser: null,
     waitingRoomSocket: null,
-    waitingRoom: null
+    question: null,
   };
-  deleteMatch(room.waitingRoom._id.toString());
   room.waitingRoomSocket.emit("matchFailure");
 }
 
 io.on('connection', (socket) => {
   // Client queuing for match
   socket.on('createPendingMatch', (data) => {
-    const {username, difficulty} = data;
+    const {username, difficulty, token} = data;
     const room = rooms[difficulty];
-    
     if (!room.waitingUser) {
-      const newMatch = createMatch(username, "testuser", difficulty, 'testQuestion')
-      newMatch.then((match) => {
-        socket.emit('createRoom', {message: "Finding match...", roomId: match._id});
-        room.waitingUser = username;
-        room.waitingRoomSocket = socket;
-        room.waitingRoom = match;
-      });
-      room.matchFailure = setTimeout(() => alertMatchFailure(rooms, difficulty), 30300);
+      
+      generateQuestionforRoom(token, difficulty, room);
+      room.waitingUser = username;
+      room.waitingRoomSocket = socket;
+      
+      room.matchFailure = setTimeout(() => alertMatchFailure(rooms, difficulty), 30100);
+    
     } else {
-      socket.emit('matchSuccess', {message: "Match Found!", roomId: room.waitingRoom._id, partner: room.waitingUser });
-      room.waitingRoomSocket.emit('matchSuccess', {message: "Match Found!", roomId: room.waitingRoom._id, partner: username})
-      updateMatch(room.waitingRoom._id, {userTwo: username});
+      const newMatch = createMatch(room.waitingUser, username, difficulty, room.question);
+      socket.emit('matchSuccess', {
+        message: "Match Found!", 
+        roomId: newMatch._id, 
+        partner: room.waitingUser, 
+        difficulty: difficulty,
+        question: room.question 
+      });
+      room.waitingRoomSocket.emit('matchSuccess', {
+        message: "Match Found!", 
+        roomId: newMatch._id, 
+        partner: username, 
+        difficulty: difficulty,
+        question: room.question
+      })
+      
       clearTimeout(room.matchFailure);
       room.waitingUser = null;
       room.waitingRoomSocket = null;
-      room.waitingRoom = null;
+      room.question = null;
       room.matchFailure = null;
+      
     }
   })
 })
