@@ -33,19 +33,19 @@ app.use('/api/match', router).all((_, res) => {
 
 let rooms = {
   Easy: {
-    hasWaitingUser: false,
+    waitingUser: null,
     waitingRoomSocket: null,
     waitingRoom: null,
     matchFailure: null
   },
   Medium: {
-    hasWaitingUser: false,
+    waitingUser: null,
     waitingRoomSocket: null,
     waitingRoom: null,
     matchFailure: null
   }, 
   Hard: {
-    hasWaitingUser: false,
+    waitingUser: null,
     waitingRoomSocket: null,
     waitingRoom: null,
     matchFailure: null
@@ -55,7 +55,7 @@ let rooms = {
 const alertMatchFailure = (rooms, difficulty) => {
   const room = rooms[difficulty]
   rooms[difficulty] = {
-    hasWaitingUser: false,
+    waitingUser: null,
     waitingRoomSocket: null,
     waitingRoom: null
   };
@@ -69,21 +69,21 @@ io.on('connection', (socket) => {
     const {username, difficulty} = data;
     const room = rooms[difficulty];
     
-    if (!room.hasWaitingUser) {
+    if (!room.waitingUser) {
       const newMatch = createMatch(username, "testuser", difficulty, 'testQuestion')
       newMatch.then((match) => {
         socket.emit('createRoom', {message: "Finding match...", roomId: match._id});
-        room.hasWaitingUser = true;
+        room.waitingUser = username;
         room.waitingRoomSocket = socket;
         room.waitingRoom = match;
       });
-      room.matchFailure = setTimeout(() => alertMatchFailure(rooms, difficulty), 10000);
+      room.matchFailure = setTimeout(() => alertMatchFailure(rooms, difficulty), 30300);
     } else {
-      socket.emit('matchSuccess', {message: "Match Found!", roomId: room.waitingRoom._id, socketId: room.waitingRoomSocket.id});
-      room.waitingRoomSocket.emit('matchSuccess', {message: "Match Found!", roomId: room.waitingRoom._id, socketId: socket.id})
+      socket.emit('matchSuccess', {message: "Match Found!", roomId: room.waitingRoom._id, partner: room.waitingUser });
+      room.waitingRoomSocket.emit('matchSuccess', {message: "Match Found!", roomId: room.waitingRoom._id, partner: username})
       updateMatch(room.waitingRoom._id, {userTwo: username});
       clearTimeout(room.matchFailure);
-      room.hasWaitingUser = false;
+      room.waitingUser = null;
       room.waitingRoomSocket = null;
       room.waitingRoom = null;
       room.matchFailure = null;

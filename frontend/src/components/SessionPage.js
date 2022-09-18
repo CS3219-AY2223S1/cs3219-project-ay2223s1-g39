@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, Select, MenuItem } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 
 const SessionPage = () => {
+  const { state } = useLocation();
+  const {roomId, partner, difficulty} = state;
   const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
   const [language, setLanguage] = useState("java");
 
@@ -35,7 +37,7 @@ const SessionPage = () => {
             textAlign: "center",
           }}
         >
-          In a session with Batman
+          In a session with {partner}
         </h3>
         <Button
           variant="contained"
@@ -65,7 +67,7 @@ const SessionPage = () => {
         >
           Two Sum
         </h2>
-        <h3 style={{ paddingLeft: "5px" }}>Difficulty: Easy</h3>
+        <h3 style={{ paddingLeft: "5px" }}>Difficulty: {difficulty}</h3>
         <div
           style={{
             fontWeight: "600",
