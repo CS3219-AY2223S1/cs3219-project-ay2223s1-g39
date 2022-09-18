@@ -8,7 +8,6 @@ import SessionPage from './components/SessionPage';
 import {Box} from "@mui/material";
 
 function App() {
-  
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
