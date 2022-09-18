@@ -12,7 +12,7 @@ const SessionPage = () => {
   return (
     <div>
       <span
-        class="menu"
+        className="menu"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -50,7 +50,7 @@ const SessionPage = () => {
         </Button>
       </span>
       <div
-        class="question-space"
+        className="question-space"
         style={{
           width: "48%",
           float: "left",
@@ -91,7 +91,7 @@ const SessionPage = () => {
         </div>
       </div>
       <div
-        class="answer-space"
+        className="answer-space"
         style={{ width: "48%", float: "right", paddingTop: "10px" }}
       >
         <div style={{ paddingBottom: "10px" }}>
@@ -108,7 +108,7 @@ const SessionPage = () => {
           </Select>
         </div>
         <div
-          class="text-area"
+          className="text-area"
           style={{
             maxHeight: "72vh",
             overflowY: "scroll",
