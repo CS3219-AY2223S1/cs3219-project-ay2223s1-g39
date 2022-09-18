@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { io } from 'socket.io-client';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { URL_QUESTION_SVC } from "../configs";
 
 const socket = io.connect("http://localhost:8001");
 

@@ -33,27 +33,35 @@ app.use('/api/match', router).all((_, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
 })
 
-let rooms = {
+let waitingRooms = {
   easy: {
     waitingUser: null,
-    waitingRoomSocket: null,
+    waitingUserSocket: null,
     question: null,
     matchFailure: null
     
   },
   medium: {
     waitingUser: null,
-    waitingRoomSocket: null,
+    waitingUserSocket: null,
     question: null,
     matchFailure: null
   }, 
   hard: {
     waitingUser: null,
-    waitingRoomSocket: null,
+    waitingUserSocket: null,
     question: null,
     matchFailure: null
   }
 };
+
+function resetWaitingRoom(room) {
+  clearTimeout(room.matchFailure);
+  room.waitingUser = null;
+  room.waitingUserSocket = null;
+  room.question = null;
+  room.matchFailure = null;
+}
 
 async function generateQuestionforRoom(token, difficulty, room) {
   const params = {
@@ -68,32 +76,32 @@ async function generateQuestionforRoom(token, difficulty, room) {
     .catch((err) => console.log(err));
 }
 
-const alertMatchFailure = (rooms, difficulty) => {
-  const room = rooms[difficulty]
+const alertMatchFailure = (waitingRooms, difficulty) => {
+  const room = waitingRooms[difficulty]
   
-  rooms[difficulty] = {
+  waitingRooms[difficulty] = {
     waitingUser: null,
-    waitingRoomSocket: null,
+    waitingUserSocket: null,
     question: null,
   };
-  room.waitingRoomSocket.emit("matchFailure");
+  room.waitingUserSocket.emit("matchFailure");
 }
 
 io.on('connection', (socket) => {
   // Client queuing for match
-  socket.on('createPendingMatch', (data) => {
+  socket.on('createPendingMatch', async (data) => {
     const {username, difficulty, token} = data;
-    const room = rooms[difficulty];
+    const room = waitingRooms[difficulty];
     if (!room.waitingUser) {
       
       generateQuestionforRoom(token, difficulty, room);
       room.waitingUser = username;
-      room.waitingRoomSocket = socket;
+      room.waitingUserSocket = socket;
       
-      room.matchFailure = setTimeout(() => alertMatchFailure(rooms, difficulty), 30100);
+      room.matchFailure = setTimeout(() => alertMatchFailure(waitingRooms, difficulty), 30100);
     
     } else {
-      const newMatch = createMatch(room.waitingUser, username, difficulty, room.question);
+      const newMatch = await createMatch(room.waitingUser, username, difficulty, room.question);
       socket.emit('matchSuccess', {
         message: "Match Found!", 
         roomId: newMatch._id, 
@@ -101,7 +109,7 @@ io.on('connection', (socket) => {
         difficulty: difficulty,
         question: room.question 
       });
-      room.waitingRoomSocket.emit('matchSuccess', {
+      room.waitingUserSocket.emit('matchSuccess', {
         message: "Match Found!", 
         roomId: newMatch._id, 
         partner: username, 
@@ -109,12 +117,7 @@ io.on('connection', (socket) => {
         question: room.question
       })
       
-      clearTimeout(room.matchFailure);
-      room.waitingUser = null;
-      room.waitingRoomSocket = null;
-      room.question = null;
-      room.matchFailure = null;
-      
+      resetWaitingRoom(room);
     }
   })
 })

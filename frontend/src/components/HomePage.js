@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
 } from "@mui/material";
+import difficulties from '../utils/difficulties';
 
 const useStyles = createUseStyles({
   difficultyButton: {
@@ -44,11 +45,6 @@ const useStyles = createUseStyles({
 const HomePage = () => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const difficulties = {
-    easy: "Easy",
-    medium: "Medium",
-    hard: "Hard"
-  };
 
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   const [user, setUser] = useState(localStorage.getItem('username') || 'User');
