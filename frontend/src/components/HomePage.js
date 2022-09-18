@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { io } from 'socket.io-client';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
 } from "@mui/material";
@@ -45,11 +45,13 @@ const useStyles = createUseStyles({
 
 const socket = io.connect("http://localhost:8001");
 
-const HomePage = (props) => {
+const HomePage = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
+
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
-  const [user, setUser] = useState(props.user || 'User'); // To change to just utilise props.user
-  const [partnerSocket, setPartnerSocket] = useState('');
+  const [user, setUser] = useState(localStorage.getItem('username') || 'User'); // To change to just utilise props.user
+  const [partner, setPartner] = useState('');
   const [difficulties, setDifficulties] = useState(["Easy", "Medium", "Hard"]);
   const [status, setStatus] = useState("idle");
   const [roomId, setRoomId] = useState('');
@@ -77,7 +79,7 @@ const HomePage = (props) => {
 
   socket.on("matchSuccess", (data) => {
     setRoomId(data.roomId);
-    setPartnerSocket(data.socketId);
+    setPartner(data.partner);
     setStatus("in-room");
     clearTimeout();
   })
@@ -101,9 +103,7 @@ const HomePage = (props) => {
       <MatchingPage />
     )
   } else if (status === 'in-room') { 
-    return (
-      <Navigate to='/session' />
-    )
+    return navigate('/session', {state: {roomId: roomId, partner: partner, difficulty: selectedDifficulty}});
   } else {
     return (
       <div> 
