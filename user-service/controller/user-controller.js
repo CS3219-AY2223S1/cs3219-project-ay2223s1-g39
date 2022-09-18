@@ -1,5 +1,5 @@
 import { ormCreateUser as _createUser, ormLogin as _login, ormUpdatePassword as _updatePassword,
-ormDeleteUser as _deleteUser } from '../model/user/user-orm.js'
+ormDeleteUser as _deleteUser } from '../model/user-orm.js'
 
 export async function createUser(req, res) {
     try {
