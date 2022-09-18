@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { Button, Select, MenuItem } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
+import starterCode from "../utils/startercode";
+import difficulties from "../utils/difficulties";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 
 const SessionPage = () => {
   const { state } = useLocation();
   const {roomId, partner, difficulty, question} = state;
-  const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
   const [language, setLanguage] = useState("java");
+  const [code, setCode] = useState(starterCode[language]);
+
+  const handleLanguageChange = (e) => {
+    setLanguage(e.target.value);
+    setCode(starterCode[e.target.value]);
+  }
 
   return (
     <div>
@@ -67,7 +74,7 @@ const SessionPage = () => {
         >
           {question.title}
         </h2>
-        <h3 style={{ paddingLeft: "5px" }}>Difficulty: {difficulty}</h3>
+        <h3 style={{ paddingLeft: "5px" }}>Difficulty: {difficulties[difficulty]}</h3>
         <div
           style={{
             fontWeight: "600",
@@ -79,13 +86,14 @@ const SessionPage = () => {
             overflow: "scroll",
           }}
         >
-          <p>
-            {question.question}
-          </p>
-          { question.examples.map((example) => {
-              <p>
-                {example}
-              </p>
+          <p>{question.question}</p>
+          { question.examples.map((example) => 
+            {
+              return (
+                <div>
+                  {example.map((line) => <p>{line.toString()}</p>)}
+                </div>
+              )
             })
           }
         </div>
@@ -98,11 +106,11 @@ const SessionPage = () => {
           <Select
             sx={{ width: "150px", height: "40px", fontWeight: "bold" }}
             value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            onChange={(e) => handleLanguageChange(e)}
           >
             <MenuItem value="java">Java</MenuItem>
+            <MenuItem value="javascript">JavaScript</MenuItem>
             <MenuItem value="python">Python</MenuItem>
-            <MenuItem value="kotlin">Kotlin</MenuItem>
             <MenuItem value="ruby">Ruby</MenuItem>
             <MenuItem value="cpp">C++</MenuItem>
           </Select>
