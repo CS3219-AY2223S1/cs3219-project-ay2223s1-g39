@@ -18,6 +18,12 @@ router.put('/update-password', verifyToken, updatePassword)
 router.delete('/delete', verifyToken, deleteUser)
  
 
+// APIs related to questions
+import {createQuestion, getQuestion, getQuestionsByDifficulty } from './controller/question-controller.js';
+router.post('/question/create', verifyToken, createQuestion)
+router.get('/question/', verifyToken, getQuestion)
+router.get('/question/difficulty', verifyToken, getQuestionsByDifficulty)
+
 
 app.use('/api/user', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
@@ -25,3 +31,18 @@ app.use('/api/user', router).all((_, res) => {
 })
 
 app.listen(8000, () => console.log('user-service listening on port 8000'));
+
+import 'dotenv/config'
+import mongoose from 'mongoose';
+
+//Set up mongoose connection
+
+let mongoDB = process.env.ENV == "PROD" ? process.env.DB_CLOUD_URI : process.env.DB_LOCAL_URI;
+
+mongoose.connect(mongoDB, { useNewUrlParser: true , useUnifiedTopology: true});
+
+let db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once("open", function () {
+  console.log("Connected successfully");
+});

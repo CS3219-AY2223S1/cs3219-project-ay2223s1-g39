@@ -1,5 +1,5 @@
 import { ormCreateUser as _createUser, ormLogin as _login, ormUpdatePassword as _updatePassword,
-ormDeleteUser as _deleteUser } from '../service/user-orm.js'
+ormDeleteUser as _deleteUser } from '../model/user/user-orm.js'
 
 export async function createUser(req, res) {
     try {
@@ -7,7 +7,6 @@ export async function createUser(req, res) {
         if (username && password) {
             const resp = await _createUser(username, password);
             if (resp.err) {
-                // return res.status(400).json({message: 'Could not create a new user!'});
                 return res.status(400).json( {message: resp.err} );
             } else {
                 return res.status(201).json({message: `Created new user ${username} successfully!`, user: resp});
