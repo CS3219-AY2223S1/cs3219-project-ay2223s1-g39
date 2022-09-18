@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Select, MenuItem } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 
 const SessionPage = () => {
   const { state } = useLocation();
-  const {roomId, partner, difficulty} = state;
+  const {roomId, partner, difficulty, question} = state;
   const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
   const [language, setLanguage] = useState("java");
 
@@ -65,7 +65,7 @@ const SessionPage = () => {
             borderRadius: "5px",
           }}
         >
-          Two Sum
+          {question.title}
         </h2>
         <h3 style={{ paddingLeft: "5px" }}>Difficulty: {difficulty}</h3>
         <div
@@ -80,15 +80,14 @@ const SessionPage = () => {
           }}
         >
           <p>
-            Given an array of integers, return the indices of the two numbers
-            whose sum is equal to a given target. You may assume that each input
-            would have exactly one solution, and you may not use the same
-            element twice.
+            {question.question}
           </p>
-          <p>
-            Given nums = [2, 7, 11, 15], target = 9. The output should be [0,
-            1]. Because nums[0] + nums[1] = 2 + 7 = 9.
-          </p>
+          { question.examples.map((example) => {
+              <p>
+                {example}
+              </p>
+            })
+          }
         </div>
       </div>
       <div

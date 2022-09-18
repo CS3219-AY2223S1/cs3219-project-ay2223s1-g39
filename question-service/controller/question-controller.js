@@ -1,4 +1,7 @@
-import { ormCreateQuestion as _createQuestion, ormGetQuestion as _getQuestion, ormGetQuestionsByDifficulty as _getQuestionsByDifficulty } from '../model/question/question-orm.js.js.js.js'
+import { ormCreateQuestion as _createQuestion, 
+  ormGetQuestion as _getQuestion, 
+  ormGetQuestionsByDifficulty as _getQuestionsByDifficulty 
+} from '../model/question-orm.js'
 
 export async function createQuestion(req, res) {
     try {
@@ -36,15 +39,15 @@ export async function getQuestion(req, res) {
 }
 
 export async function getQuestionsByDifficulty(req, res) {
-    try {
-        const { difficulty } = req.body;
+  try {
+        const { difficulty } = req.query;
         const resp = await _getQuestionsByDifficulty(difficulty);
         if (resp.err) {
             return res.status(400).json({message: resp.err});
         }
         return res.status(200).json({message: 'Got questions successfully', question: resp});
     } catch (err) {
-        console.log(err)
+        console.log(err);
         return res.status(500).json({message: 'Database failure when getting questions!'})
     }
 }
