@@ -6,7 +6,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cors()) // config cors so that front-end can use
 app.options('*', cors())
-import { createUser, login, updatePassword, deleteUser } from './controller/user-controller.js';
+import { createUser, login, updatePassword, deleteUser } from './user-controller.js';
 import {verifyToken} from './middleware/auth.js';
 const router = express.Router()
 
@@ -18,11 +18,11 @@ router.put('/update-password', verifyToken, updatePassword)
 router.delete('/delete', verifyToken, deleteUser)
  
 
-// APIs related to questions
-import {createQuestion, getQuestion, getQuestionsByDifficulty } from './controller/question-controller.js';
-router.post('/question/create', verifyToken, createQuestion)
-router.get('/question/', verifyToken, getQuestion)
-router.get('/question/difficulty', verifyToken, getQuestionsByDifficulty)
+// // APIs related to questions
+// import {createQuestion, getQuestion, getQuestionsByDifficulty } from './controller/question-controller.js';
+// router.post('/question/create', verifyToken, createQuestion)
+// router.get('/question/', verifyToken, getQuestion)
+// router.get('/question/difficulty', verifyToken, getQuestionsByDifficulty)
 
 
 app.use('/api/user', router).all((_, res) => {
