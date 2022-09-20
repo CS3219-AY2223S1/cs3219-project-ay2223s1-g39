@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Select, MenuItem } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import starterCode from "../utils/startercode";
+import difficulties from "../utils/difficulties";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 
 const SessionPage = () => {
-  const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
+  const { state } = useLocation();
+  const {roomId, partner, difficulty, question} = state;
   const [language, setLanguage] = useState("java");
+  const [code, setCode] = useState(starterCode[language]);
+
+  const handleLanguageChange = (e) => {
+    setLanguage(e.target.value);
+    setCode(starterCode[e.target.value]);
+  }
 
   return (
     <div>
       <span
-        class="menu"
+        className="menu"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -35,7 +44,7 @@ const SessionPage = () => {
             textAlign: "center",
           }}
         >
-          In a session with Batman
+          In a session with {partner}
         </h3>
         <Button
           variant="contained"
@@ -48,7 +57,7 @@ const SessionPage = () => {
         </Button>
       </span>
       <div
-        class="question-space"
+        className="question-space"
         style={{
           width: "48%",
           float: "left",
@@ -63,9 +72,9 @@ const SessionPage = () => {
             borderRadius: "5px",
           }}
         >
-          Two Sum
+          {question.title}
         </h2>
-        <h3 style={{ paddingLeft: "5px" }}>Difficulty: Easy</h3>
+        <h3 style={{ paddingLeft: "5px" }}>Difficulty: {difficulties[difficulty]}</h3>
         <div
           style={{
             fontWeight: "600",
@@ -77,37 +86,37 @@ const SessionPage = () => {
             overflow: "scroll",
           }}
         >
-          <p>
-            Given an array of integers, return the indices of the two numbers
-            whose sum is equal to a given target. You may assume that each input
-            would have exactly one solution, and you may not use the same
-            element twice.
-          </p>
-          <p>
-            Given nums = [2, 7, 11, 15], target = 9. The output should be [0,
-            1]. Because nums[0] + nums[1] = 2 + 7 = 9.
-          </p>
+          <p>{question.question}</p>
+          { question.examples.map((example) => 
+            {
+              return (
+                <div>
+                  {example.map((line) => <p>{line.toString()}</p>)}
+                </div>
+              )
+            })
+          }
         </div>
       </div>
       <div
-        class="answer-space"
+        className="answer-space"
         style={{ width: "48%", float: "right", paddingTop: "10px" }}
       >
         <div style={{ paddingBottom: "10px" }}>
           <Select
             sx={{ width: "150px", height: "40px", fontWeight: "bold" }}
             value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            onChange={(e) => handleLanguageChange(e)}
           >
             <MenuItem value="java">Java</MenuItem>
+            <MenuItem value="javascript">JavaScript</MenuItem>
             <MenuItem value="python">Python</MenuItem>
-            <MenuItem value="kotlin">Kotlin</MenuItem>
             <MenuItem value="ruby">Ruby</MenuItem>
             <MenuItem value="cpp">C++</MenuItem>
           </Select>
         </div>
         <div
-          class="text-area"
+          className="text-area"
           style={{
             maxHeight: "72vh",
             overflowY: "scroll",

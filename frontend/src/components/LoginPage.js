@@ -49,6 +49,8 @@ const LoginPage = () => {
           setSuccessDialog("Successfully logged in!")
           setIsLoginSuccess(true)
           document.cookie = "token=" + res.user.token
+          localStorage.setItem('username', res.user.username);
+          localStorage.setItem('id', res.user._id);
         } else {
           setErrorDialog("Invalid credentials!")
         }
