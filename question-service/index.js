@@ -17,7 +17,6 @@ router.post('/create', verifyToken, createQuestion)
 router.get('/', verifyToken, getQuestion)
 router.get('/difficulty', verifyToken, getQuestionsByDifficulty)
 
-
 app.use('/api/question', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
