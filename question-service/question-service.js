@@ -1,4 +1,4 @@
-import questionModel from '../model/question/question-model.js';
+import questionModel from './question-model.js';
 
 export async function createQuestion(params) {
     const difficulty = params.difficulty;

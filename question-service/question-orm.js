@@ -1,4 +1,4 @@
-import { createQuestion, getQuestion, getQuestionsByDifficulty } from '../../service/question-service.js';
+import { createQuestion, getQuestion, getQuestionsByDifficulty } from './question-service.js';
 
 //need to separate orm functions from repository to decouple business logic from persistence
 export async function ormCreateQuestion(difficulty, title, question, examples, constraints) {
