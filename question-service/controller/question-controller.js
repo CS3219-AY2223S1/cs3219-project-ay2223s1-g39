@@ -43,6 +43,9 @@ export async function getQuestion(req, res) {
 export async function getQuestionsByDifficulty(req, res) {
     try {
           const { difficulty } = req.query;
+          if (difficulty != 'easy' && difficulty != 'medium' && difficulty != 'hard') {
+            return res.status(400).json({message: "input invalid difficulty!"})
+        }
           const resp = await _getQuestionsByDifficulty(difficulty);
           if (resp.err) {
               return res.status(400).json({message: resp.err});
