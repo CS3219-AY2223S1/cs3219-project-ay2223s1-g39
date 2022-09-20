@@ -5,7 +5,6 @@ export async function createQuestion(req, res) {
         
         const { difficulty, title, question, examples, constraints } = req.body;
         if (difficulty && question && title) {
-            console.log(constraints)
             const resp = await _createQuestion(difficulty, title, question, examples, constraints);
             if (resp.err) {
                 return res.status(400).json({message: resp.err});
