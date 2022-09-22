@@ -6,8 +6,18 @@ import MatchingPage from './components/MatchingPage';
 import HomePage from './components/HomePage';
 import SessionPage from './components/SessionPage';
 import {Box} from "@mui/material";
+import SyncProvider from "./SyncProvider"
 
 function App() {
+
+    const getToken = async () => {
+        const response = await fetch('http://localhost:3001/tokens', {
+          method: 'POST',
+        });
+        const data = await response.json();
+        return data.token;
+      };
+
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -42,7 +52,9 @@ function App() {
                         }/>
                         <Route path="/session" element={
                             <RequireAuth>
-                                <SessionPage/>
+                                <SyncProvider tokenFunc={getToken}>
+                                    <SessionPage/>
+                                </SyncProvider>
                             </RequireAuth>
                         }/>
                     </Routes>
