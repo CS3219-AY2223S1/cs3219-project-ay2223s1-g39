@@ -20,9 +20,4 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/tokens', tokensRouter);
 
-const port = 3001;
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`)
-// })
-
 module.exports = app;
