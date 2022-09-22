@@ -11,7 +11,7 @@ const SessionPage = () => {
   const {roomId, partner, difficulty, question} = state;
   const [language, setLanguage] = useState("java");
   const [query, setQuery] = useState("");
-  const [code, setCode] = useSyncState('name');
+  const [code, setCode] = useSyncState('code');
 
   // this helps to reduce the number of times setState is called, reducing funkiness while typing 
   useEffect(() => {
