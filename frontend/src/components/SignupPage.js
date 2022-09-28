@@ -23,7 +23,6 @@ const useStyles = createUseStyles({
     textAlign: "center",
     margin: "auto",
     backgroundColor: "#b5dce9",
-    padding: "160px 0px"
   },
   quote: {
     marginBottom: "50px",
@@ -97,8 +96,8 @@ function SignupPage() {
     }
 
     return (
-      <Grid container width={"100%"} height={"100%"}>
-        <Grid item xs={8}>
+      <Grid container height={"100%"}>
+        <Grid item xs={8} sx={{backgroundColor:"#b5dce9", height: "100%"}}>
           <div className={classes.leftPortion}>
             <h1 className={classes.quote}>Join a network of like-minded individuals.</h1>
             <img src={signupPageImage} className={classes.signupPageImage}/>
