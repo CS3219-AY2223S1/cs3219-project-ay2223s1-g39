@@ -3,6 +3,13 @@ import chai from "chai";
 import chaiHttp from "chai-http";
 import index from "../index.js";
 const expect = chai.expect;
+let should = chai.should();
+let defaultUser = {
+  username: "admin0",
+  password: "admin0123"
+};
+
+let token;
 
 // Configure chai
 chai.use(chaiHttp);
@@ -11,113 +18,51 @@ chai.should();
 
 
 describe("User Service", function () {
-  describe(
-    "GET /api/user",
-    function () {
-      // Test for successful GET call
-      it("should return successful GET call", (done) => {
-        chai
-          .request(index)
-          .get("/api/user")
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.body.should.be.a("object");
-            done();
-          });
+
+  beforeEach(done => {
+    chai
+      .request(index)
+      .post("/api/user/signup")
+      .send(defaultUser)
+      .end((err, res) => {
+        // res.should.have.status(200);
+        done();
       });
+  });
 
-      // Test for unsuccessful GET call
-      it("should return unsuccessful GET call", (done) => {
-        const id = 5;
-        chai
-          .request(index)
-          .get(`/${id}`)
-          .end((err, res) => {
-            res.should.have.status(404);
-            done();
-          });
+  // before('Login user', async () => {
+  //   const response = await chai.request(server)
+  //     .post('api/v1/account')
+  //     .set('Accept', 'application/json')
+  //     .send({ "email": "john@gmail.com", "password": "123456" })
+  //   token = res.body.token;
+  // });
+  beforeEach(done => {
+    chai
+      .request(index)
+      .post("api/user/login")
+      .send(defaultUser)
+      .end((err, res) => {
+        token = res.token;
+        res.should.have.status(200);
+        done();
       });
-    },
+  });
 
-    describe(
-      "POST /api/user/signup",
-      function () {
-        // Test for successful POST call
-        // it("should return successful POST call", (done) => {
-        //   const newTestUser = {
-        //     username: "testuser",
-        //     password: "abc123123",
-        //   }
-        //   chai
-        //     .request(index)
-        //     .post("/api/user/signup")
-        //     .send(newTestUser)
-        //     .end((err, res) => {
-        //       // expect(res.should.have.status(200));
-        //       // expect(res.body.should.be.a("object"));
-        //       expect(res.body.message).to.equal('Username already taken!');
-        //       done();
-        //     });
-        // });
-
-        var agent = chai.request.agent(index);
-        agent
-          .post("/api/user/signup")
-          .send({ username: "me", password: "123" })
-          .then(function (res) {
-            expect(res).to.have.cookie("sessionid");
-            // The `agent` now has the sessionid cookie saved, and will send it
-            // back to the server in the next request:
-            return agent.get("/user/me").then(function (res) {
-              expect(res).to.have.status(200);
-            });
-          });
-
-        // // Test for unsuccessful GET call
-        // it("should return unsuccessful GET call", (done) => {
-        //   const id = 5;
-        //   chai
-        //     .request(index)
-        //     .get(`/${id}`)
-        //     .end((err, res) => {
-        //       res.should.have.status(404);
-        //       done();
-        //     });
-        // });
-      },
-
-      describe("DELETE /api/user/delete", function () {
-        // Test for successful DELETE call
-        it("should return successful DELETE call", (done) => {
-          const newTestUser = {
-            username: "testuser",
-            password: "abc123123",
-            token: token
-          };
-          chai
-            .request(index)
-            .delete("/api/user/delete")
-            .send(newTestUser)
-
-            .end((err, res) => {
-              expect(res.should.have.status(200));
-              // expect(res.body.should.be.a("object"));
-              done();
-            });
+  describe("Delete test user", () => {
+    it("should delete user successfully", (done) => {
+      chai
+        .request(index)
+        .delete("api/user/delete")
+        .send(defaultUser)
+        .end((err, res) => {
+          console.log(err)
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          done();
         });
+    });
+  });
 
-        // // Test for unsuccessful GET call
-        // it("should return unsuccessful GET call", (done) => {
-        //   const id = 5;
-        //   chai
-        //     .request(index)
-        //     .get(`/${id}`)
-        //     .end((err, res) => {
-        //       res.should.have.status(404);
-        //       done();
-        //     });
-        // });
-      })
-    )
-  );
+
 });
