@@ -18,7 +18,7 @@ import loginPageImage from '../assets/loginPageImage.svg';
 const useStyles = createUseStyles({
   leftPortion: {
     textAlign: "center",
-    padding: "40px 0px",
+    padding: "45px 0px",
     margin: "auto",
     backgroundColor: "#b5dce9"
   },
@@ -48,7 +48,7 @@ const useStyles = createUseStyles({
     display: "flex" 
   },
   loginContainerButton: {
-    height: "50px",
+    height: "45px",
     margin: "10px 0px",
     textTransform: "Capitalize"
   }
@@ -102,7 +102,7 @@ const LoginPage = () => {
   };
 
   return (  
-    <Grid container width={"100%"} height={"100%"}>
+    <Grid container>
       <Grid item xs={8}>
         <div className={classes.leftPortion}>
           <h1 className={classes.quote}>Built for Coders, by coders.</h1>
