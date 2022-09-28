@@ -6,8 +6,17 @@ import MatchingPage from './components/MatchingPage';
 import HomePage from './components/HomePage';
 import SessionPage from './components/SessionPage';
 import {Box} from "@mui/material";
+import {createUseStyles} from 'react-jss';
+
+const useStyles = createUseStyles({
+  app: {
+    height: "100vh"
+  }
+})
 
 function App() {
+    const classes = useStyles();
+
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -23,7 +32,7 @@ function App() {
     }
 
     return (
-        <div className="App">
+        <div className={classes.app}>
           <Router>
               <Routes>
                   <Route exact path="/" element={<Navigate replace to="/login" />}></Route>
