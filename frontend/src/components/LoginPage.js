@@ -7,10 +7,52 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
+  Grid
 } from "@mui/material";
 import { useState } from "react";
 import { URL_USER_SVC } from "../configs";
-import { Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
+import { createUseStyles } from 'react-jss';
+import loginPageImage from '../assets/loginPageImage.svg';
+
+const useStyles = createUseStyles({
+  leftPortion: {
+    textAlign: "center",
+    padding: "40px 0px",
+    margin: "auto",
+    backgroundColor: "#b5dce9"
+  },
+  quote: {
+    colour: "#a9a9a9",
+  },
+  loginPageImage:{ 
+    maxWidth: "60%"
+  },
+  rightPortion: {
+    justifyContent: "center",
+    display: "flex",
+    alignItems: "center",
+    height: "100%",
+  },
+  loginContainer: {
+    width: "100%",
+    margin: "20px auto",
+    padding: "50px 20px",
+    borderRadius: "10px",
+    // boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  loginPromptContainer: {
+    justifyContent: "center", 
+    display: "flex" 
+  },
+  loginContainerButton: {
+    height: "50px",
+    margin: "10px 0px",
+    textTransform: "Capitalize"
+  }
+})
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -18,6 +60,7 @@ const LoginPage = () => {
   const [isLoginSuccess, setIsLoginSuccess] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogMsg, setDialogMsg] = useState("");
+  const classes = useStyles();
 
   const setSuccessDialog = (msg) => {
     setIsDialogOpen(true);
@@ -58,66 +101,71 @@ const LoginPage = () => {
       .catch((error) => console.log(error))
   };
 
-  return (
-    <div
-      style={{
-        justifyContent: "center",
-        alignContent: "center",
-        textAlign: "center",
-      }}
-    >
-      <h1 style={{ paddingBottom: "50px" }}> Welcome to PeerPrep!</h1>
-      <div style={{ justifyContent: "center", display: "flex" }}>
-        <Box display={"flex"} flexDirection={"column"} width={"30%"}>
-          <Typography variant={"h4"} marginBottom={"2rem"}>
-            <strong>Login</strong>
-          </Typography>
-          <TextField
-            label="Username"
-            variant="standard"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            sx={{ marginBottom: "1rem" }}
-            autoFocus
-          />
-          <TextField
-            label="Password"
-            variant="standard"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            sx={{ marginBottom: "2rem" }}
-          />
-          <Box
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"flex-end"}
-          >
-            <Button onClick={handleLogin} variant={"contained"} size={"large"}>
-              Login
-            </Button>
-          </Box>
-          <Dialog open={isDialogOpen} onClose={closeDialog}>
-            <DialogContent sx={{ textTransform: "capitalize" }}>
-              <DialogContentText sx={{ textAlign: "center", fontWeight: "bold" }}>{dialogMsg}</DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              {isLoginSuccess ? (
-                <Button component={Link} to="/home">
-                  <p style={{ fontWeight: "bold" }}>
-                    Proceed to await match!
-                  </p>
-                </Button>
-              ) : (
-                <Button component={Link} to="/signup">
-                  Click here to sign up!
-                </Button>
-              )}
-            </DialogActions>
-          </Dialog>
-        </Box>
-      </div>
-    </div>
+  return (  
+    <Grid container width={"100%"} height={"100%"}>
+      <Grid item xs={8}>
+        <div className={classes.leftPortion}>
+          <h1 className={classes.quote}>Built for Coders, by coders.</h1>
+          <img src={loginPageImage} className={classes.loginPageImage}/>
+        </div>
+      </Grid>
+      <Grid item xs={4}>
+        <div className={classes.rightPortion}>
+        <div className={classes.loginContainer}>
+          <div className={classes.loginPromptContainer}>
+            <Box display={"flex"} flexDirection={"column"} sx={{width: "80%"}}>
+              <Typography variant={"h4"}>
+                <strong>Welcome Back!</strong>
+              </Typography>
+              <Typography variant={"p"} marginBottom={"1rem"}>
+                <p>Some text here to make it look slightly fancy :)</p>
+              </Typography>
+              <br />
+              <TextField
+                label="Username"
+                variant="outlined"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                sx={{ marginBottom: "2rem" }}
+                autoFocus
+              />
+              <TextField
+                label="Password"
+                variant="outlined"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                sx={{ marginBottom: "3rem" }}
+              />
+              <Button className={classes.loginContainerButton} onClick={handleLogin} variant={"contained"}>
+                Login
+              </Button>
+              <Button className={classes.loginContainerButton} variant={"outlined"} component={Link} to="/signup">
+                New here? Click here to sign up!
+              </Button>
+              
+              <Dialog open={isDialogOpen} onClose={closeDialog}>
+                <DialogContent sx={{ textTransform: "capitalize" }}>
+                  <DialogContentText sx={{ textAlign: "center", fontWeight: "bold" }}>{dialogMsg}</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  {isLoginSuccess 
+                    ? <Navigate to="/home" />
+                    : (
+                    <Button component={Link} to="/signup">
+                      Click here to sign up!
+                    </Button>
+                  )}
+                </DialogActions>
+              </Dialog>
+
+
+            </Box>
+          </div>
+        </div>
+        </div>
+      </Grid>
+    </Grid> 
   );
 };
 
