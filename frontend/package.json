@@ -27,11 +27,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "lint": "npx eslint .",
-    "twilio": "cd src/Twilio && npm start",
-    "matching-service": "cd ../matching-service && npm run dev",
-    "question-service": "cd ../question-service && npm run dev",
-    "user-service": "cd ../user-service && npm run dev",
-    "dev": "concurrently \"npm start\" \"npm run twilio\" \"npm run matching-service\" \"npm run question-service\" \"npm run user-service\""
+    "twilio": "cd src/Twilio && npm install && npm start",
+    "matching-service": "cd ../matching-service && npm install && npm run dev",
+    "question-service": "cd ../question-service && npm install && npm run dev",
+    "user-service": "cd ../user-service && npm install && npm run dev",
+    "dev": "concurrently \"npm install && npm start\" \"npm run twilio\" \"npm run matching-service\" \"npm run question-service\" \"npm run user-service\""
   },
   "eslintConfig": {
     "extends": [
