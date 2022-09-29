@@ -38,13 +38,47 @@ describe("Test User Service", function () {
     token = response.body.user.token;
   });
 
+  describe("Test createUser function /api/user/signup", function () {
+    it("should return error 400 for invalid username", (done) => {
+      chai
+        .request(index)
+        .post("/api/user/signup")
+        .send({
+          username: "",
+          password: "admin0123"
+        })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.be.a("object");
+          expect(res.body.message).to.equal("Username and/or Password are missing!");
+          done();
+        });
+    }),
+    
+    it("should return error 400 for invalid password", (done) => {
+      chai
+        .request(index)
+        .post("/api/user/signup")
+        .send({
+          username: "testuser500",
+          password: ""
+        })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.be.a("object");
+          expect(res.body.message).to.equal("Username and/or Password are missing!");
+          done();
+        });
+    })
+  });
+
   describe("Test updatePassword function /api/user/update-password", function () {
     it("should update userPassword successfully", (done) => {
       chai
         .request(index)
         .put("/api/user/update-password")
         .send({
-          username: "admin0",
+          username: "admin0", 
           oldPassword: "admin0123",
           newPassword: "admin01234",
           token: token
