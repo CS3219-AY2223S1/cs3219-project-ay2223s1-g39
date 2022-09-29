@@ -9,26 +9,27 @@ let should = chai.should();
 chai.use(chaiHttp);
 chai.should();
 
-describe("User Service", function () {
+describe("Test User Service", function () {
+  let token;
+
   let defaultUser = {
     username: "admin0",
     password: "admin0123",
   };
-  
-  let token = "";
-  before("Signup user", (done) => {
+
+  before("Signup default valid user", (done) => {
     chai
       .request(index)
       .post("/api/user/signup")
       .set("Accept", "application/json")
       .send(defaultUser)
       .end((err, res) => {
-        // res.should.have.status(200);
+        // res.should.have.status(201);
         done();
       });
   });
 
-  before("Login user", async () => {
+  before("Login default valid user", async () => {
     const response = await chai
       .request(index)
       .post("/api/user/login")
@@ -37,21 +38,41 @@ describe("User Service", function () {
     token = response.body.user.token;
   });
 
-  it("should delete user successfully", (done) => {
-    chai
-      .request(index)
-      .delete("/api/user/delete")
-      .send({
-        username: "admin0",
-        password: "admin0123",
-        token: token
-      })
-      .set("x-auth-token", token)
-      .auth(token, { type: "bearer" })
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.be.a("object");
-        done();
-      });
+  describe("Test updatePassword function /api/user/update-password", function () {
+    it("should update userPassword successfully", (done) => {
+      chai
+        .request(index)
+        .put("/api/user/update-password")
+        .send({
+          username: "admin0",
+          oldPassword: "admin0123",
+          newPassword: "admin01234",
+          token: token
+        })
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a("object");
+          done();
+        });
+    });
   });
+
+  describe("Test deleteUser function /api/user/delete", function () {
+    it("should delete user successfully", (done) => {
+      chai
+        .request(index)
+        .delete("/api/user/delete")
+        .send({
+          username: "admin0",
+          password: "admin01234",
+          token: token
+        })
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a("object");
+          done();
+        });
+    });
+  });
+
 });
