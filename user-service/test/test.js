@@ -24,18 +24,22 @@ describe("Test User Service", function () {
       .set("Accept", "application/json")
       .send(defaultUser)
       .end((err, res) => {
-        // res.should.have.status(201);
+        expect(res).to.have.status(201);
         done();
       });
   });
 
-  before("Login default valid user", async () => {
-    const response = await chai
+  before("Login default valid user", (done) => {
+    chai
       .request(index)
       .post("/api/user/login")
       .set("Accept", "application/json")
-      .send(defaultUser);
-    token = response.body.user.token;
+      .send(defaultUser)
+      .end((err, res) => {
+        token = res.body.user.token;
+        expect(res).to.have.status(200);
+        done();
+      });
   });
 
   describe("Test createUser function /api/user/signup", function () {
