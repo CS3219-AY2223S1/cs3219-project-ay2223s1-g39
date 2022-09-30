@@ -5,7 +5,6 @@ import SignupPage from './components/SignupPage';
 import MatchingPage from './components/MatchingPage';
 import HomePage from './components/HomePage';
 import SessionPage from './components/SessionPage';
-import {Box} from "@mui/material";
 import {createUseStyles} from 'react-jss';
 
 const useStyles = createUseStyles({
