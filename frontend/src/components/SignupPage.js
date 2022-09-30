@@ -1,28 +1,23 @@
 import {
+    Alert,
     Box,
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
+    Grid,
     TextField,
     Typography,
-    Grid
 } from "@mui/material";
 import {useState} from "react";
 import axios from "axios";
 import {URL_USER_SVC} from "../configs";
-import {STATUS_CODE_CONFLICT, STATUS_CODE_CREATED} from "../constants";
-import {Link} from "react-router-dom";
+import {STATUS_CODE_CREATED} from "../constants";
+import { useNavigate, Link } from "react-router-dom";
 import { createUseStyles } from 'react-jss';
 import signupPageImage from '../assets/signupPageImage.svg';
 
 const useStyles = createUseStyles({
   leftPortion: {
     textAlign: "center",
-    margin: "auto",
-    backgroundColor: "#b5dce9",
+    marginTop: "10%"
   },
   quote: {
     marginBottom: "50px",
@@ -45,6 +40,9 @@ const useStyles = createUseStyles({
     justifyContent: "center",
     alignContent: "center"
   },
+  alertBanner: {
+    marginBottom: "10px"
+  },
   signupPromptContainer: {
     justifyContent: "center", 
     display: "flex"
@@ -53,46 +51,42 @@ const useStyles = createUseStyles({
     height: "45px",
     margin: "10px 0px",
     textTransform: "Capitalize"
+  },
+  passwordMismatch: {
+    margin: "5px 0",
+    fontSize: "12px",
+    fontStyle: "italic",
+    color: "#898989"
   }
 })
 
 function SignupPage() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [dialogTitle, setDialogTitle] = useState("")
-    const [dialogMsg, setDialogMsg] = useState("")
-    const [isSignupSuccess, setIsSignupSuccess] = useState(false)
+    const [confirmPassword, setConfirmPassword] = useState("")
+    const [errorMessage, setErrorMessage] = useState("")
     const classes = useStyles();
 
+    const navigate = useNavigate();
+
+    const passwordsMatch = password === confirmPassword;
+
     const handleSignup = async () => {
-        setIsSignupSuccess(false)
+        if (!passwordsMatch) return setErrorMessage('Passwords do not match.')
+        console.log("post!");
         const res = await axios.post(URL_USER_SVC + "/signup", { username: username, password: password })
             .catch((err) => {
-                if (err.response.status === STATUS_CODE_CONFLICT) {
-                    setErrorDialog('This username already exists')
-                } else {
-                    setErrorDialog('Please try again later')
+                if (err.response.status !== STATUS_CODE_CREATED) {
+                    setErrorMessage(err.response.data.message)
                 }
             })
         if (res && res.status === STATUS_CODE_CREATED) {
-            setSuccessDialog('Account successfully created')
-            setIsSignupSuccess(true)
+          return navigate('/login', {
+            state: {
+              registrationSuccess: true
+            }
+          });
         }
-    }
-
-    const closeDialog = () => setIsDialogOpen(false)
-
-    const setSuccessDialog = (msg) => {
-        setIsDialogOpen(true)
-        setDialogTitle('Success')
-        setDialogMsg(msg)
-    }
-
-    const setErrorDialog = (msg) => {
-        setIsDialogOpen(true)
-        setDialogTitle('Error')
-        setDialogMsg(msg)
     }
 
     return (
@@ -100,7 +94,7 @@ function SignupPage() {
         <Grid item xs={8} sx={{backgroundColor:"#b5dce9", height: "100%"}}>
           <div className={classes.leftPortion}>
             <h1 className={classes.quote}>Join a network of like-minded individuals.</h1>
-            <img src={signupPageImage} className={classes.signupPageImage}/>
+            <img alt="people-in-front-of-computer" src={signupPageImage} className={classes.signupPageImage}/>
           </div>
         </Grid>
         <Grid item xs={4}>
@@ -108,18 +102,19 @@ function SignupPage() {
         <div className={classes.signupContainer}>
           <div className={classes.signupPromptContainer}></div>
               <Box display={"flex"} flexDirection={"column"} sx={{width: "80%"}}>
+                  {errorMessage && <Alert severity="error" className={classes.alertBanner}>{errorMessage}</Alert>}
                   <Typography variant={"h4"}>
                     <strong>Create an Account</strong>
                   </Typography>
                   <Typography variant={"p"} marginBottom={"1rem"} lineHeight={"1.5rem"}>
-                    <p>Get connected with many others like you, preparing for their dream technical job. </p>
+                    <p>Get connected with many others just like you, preparing for their dream tech job. </p>
                   </Typography>
                   <TextField
                       label="Username"
                       variant="outlined"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      sx={{marginBottom: "2rem"}}
+                      sx={{marginBottom: "1.5rem"}}
                       autoFocus
                   />
                   <TextField
@@ -128,28 +123,22 @@ function SignupPage() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      sx={{marginBottom: "3rem"}}
+                      sx={{marginBottom: "1.5rem"}}
                   />
+                  <TextField
+                      label="Confirm Password"
+                      variant="outlined"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  {!passwordsMatch && <label className={classes.passwordMismatch}>Passwords do not match!</label>}
+                  <br/>
                   <Button className={classes.signupButton} variant={"contained"} onClick={handleSignup}>Sign up</Button>
                   <br />
                   <Typography variant={"p"} marginBottom={"1rem"}>
                     <p>Already have an account? Log in <Link to="/login">here</Link>.</p>
                   </Typography>
-                  <Dialog
-                      open={isDialogOpen}
-                      onClose={closeDialog}
-                  >
-                      <DialogTitle>{dialogTitle}</DialogTitle>
-                      <DialogContent>
-                          <DialogContentText>{dialogMsg}</DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                          {isSignupSuccess
-                              ? <Button component={Link} to="/login">Log in</Button>
-                              : <Button onClick={closeDialog}>Done</Button>
-                          }
-                      </DialogActions>
-                  </Dialog>
               </Box>
               </div>
         </div>
