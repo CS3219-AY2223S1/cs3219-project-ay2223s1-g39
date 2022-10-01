@@ -73,6 +73,21 @@ describe("Test User Service", function () {
           expect(res.body.message).to.equal("Username and/or Password are missing!");
           done();
         });
+    // }),
+
+    // it("should return error 500 for broken http call", (done) => {
+    //   chai
+    //     .request(index)
+    //     .post("/api/user/signup")
+    //     .send({
+    //       username: "testuser500"
+    //     })
+    //     .end((err, res) => {
+    //       expect(res).to.have.status(500);
+    //       expect(res.body).to.be.a("object");
+    //       expect(res.body.message).to.equal("Database failure when creating new user!");
+    //       done();
+    //     });
     })
   });
 
