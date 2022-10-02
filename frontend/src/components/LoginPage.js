@@ -14,8 +14,11 @@ import loginPageImage from '../assets/loginPageImage.svg';
 
 const useStyles = createUseStyles({
   leftPortion: {
+    paddingTop: "3%",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
     textAlign: "center",
-    marginTop: "3%",
   },
   quote: {
     colour: "#a9a9a9",
@@ -96,8 +99,12 @@ const LoginPage = () => {
     <Grid container sx={{height: "100%"}}>
       <Grid item xs={8} sx={{backgroundColor:"#b5dce9", height: "100%"}}>
         <div className={classes.leftPortion}>
-          <h1 className={classes.quote}>Built with love for coders, by coders. </h1>
-          <img alt="pair-programming" src={loginPageImage} className={classes.loginPageImage}/>
+          <div>
+            <h1 className={classes.quote}>Built with love for coders, by coders. ❤️</h1>
+          </div>
+          <div>
+            <img alt="pair-programming" src={loginPageImage} className={classes.loginPageImage}/>
+          </div>
         </div>
       </Grid>
       <Grid item xs={4}>
