@@ -26,7 +26,7 @@ export async function login(req, res) {
         if (resp.err) {
             return res.status(400).json({message: resp.err});
         }
-        return res.status(200).json({message: "success!", user: resp})
+        return res.status(200).json({message: "Success!", user: resp})
     } catch (err) {
         return res.status(500).json({message: 'Database failure when logging in!'})
     }

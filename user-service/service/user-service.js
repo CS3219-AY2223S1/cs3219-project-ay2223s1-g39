@@ -4,9 +4,9 @@ import jwt from 'jsonwebtoken'
 
 export async function createUser(params) {
   const username = params.username
-  const pw = params.password
+  const password = params.password
   const user = await userModel.findOne({username: username})
-  if (username == '') {
+  if (username.trim() == '') {
     throw "Please enter a valid username!"
   }
   if (username.length < 5) {
@@ -15,15 +15,15 @@ export async function createUser(params) {
   if (user != null) {
     throw "Username already taken!"
   }
-  if (pw == '') {
+  if (password.trim() == '') {
     throw "Please enter a valid password!"
   }
-  if (pw.length < 5) {
+  if (password.length < 5) {
     throw "Please enter a password with 5 or more characters!"
   }
   
   const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(pw, salt);
+  const hash = bcrypt.hashSync(password, salt);
 
   let newUser = await userModel.create({
     username: username,
@@ -44,15 +44,18 @@ export async function createUser(params) {
 
 export async function loginUser(params) {
   const username = params.username;
-  const pw = params.password;
+  const password = params.password;
   if (username.length < 5) {
-    throw 'Please enter a valid username!'
+    throw "Please enter a valid username!"
+  }
+  if (password.length < 5) {
+    throw "Please enter a valid password!"
   }
   let user = await userModel.findOne({username: username})
   if (user == null) {
     throw "No such user found!"
   }
-  const isCorrectPw = await bcrypt.compare(pw, user.password)
+  const isCorrectPw = await bcrypt.compare(password, user.password)
   if (isCorrectPw) {
     const token = jwt.sign(
       { user_id: user._id },
@@ -67,7 +70,7 @@ export async function loginUser(params) {
     
     return user
   } else {
-     throw 'Invalid password!'
+     throw "Invalid password!"
   }
 }
 
@@ -84,8 +87,14 @@ export async function updatePassword(params) {
   if (user == null) {
     throw "No such user found or JWT expired!"
   }
+  if (user.username != username) {
+    throw "Username linked with JWT is different from username sent!"
+  }
+  if (npw.length < 5) {
+    throw "Please enter a password with 5 or more characters!"
+  }
   if (opw.length < 5) {
-    throw 'Please enter a valid password'
+    throw 'Please enter a valid password!'
   }
 
   const isCorrectPw = await bcrypt.compare(opw, user.password)
@@ -104,7 +113,7 @@ export async function updatePassword(params) {
 export async function deleteUser(params) {
   const uid = params.uid
   const username = params.username
-  const pw = params.password
+  const password = params.password
    if (username.length < 5) {
     throw 'Please enter a valid username!'
   }
@@ -112,11 +121,11 @@ export async function deleteUser(params) {
   if (user == null) {
     throw "No such user found or JWT expired!"
   }
-  if (pw.length < 5) {
+  if (password.length < 5) {
     throw 'Please enter a valid password'
   }
 
-  const isCorrectPw = await bcrypt.compare(pw, user.password)
+  const isCorrectPw = await bcrypt.compare(password, user.password)
   if (isCorrectPw) {
     const updatedUser = await userModel.findOneAndDelete({username: username})
     return updatedUser
