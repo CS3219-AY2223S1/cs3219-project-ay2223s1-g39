@@ -128,9 +128,7 @@ describe("Test User Service", function () {
           .end((err, res) => {
             expect(res).to.have.status(400);
             expect(res.body).to.be.a("object");
-            expect(res.body.message).to.equal(
-              "Please enter a valid username!"
-            );
+            expect(res.body.message).to.equal("Please enter a valid username!");
             done();
           });
       }),
@@ -145,9 +143,7 @@ describe("Test User Service", function () {
           .end((err, res) => {
             expect(res).to.have.status(400);
             expect(res.body).to.be.a("object");
-            expect(res.body.message).to.equal(
-              "Please enter a valid password!"
-            );
+            expect(res.body.message).to.equal("Please enter a valid password!");
             done();
           });
       }),
@@ -192,9 +188,7 @@ describe("Test User Service", function () {
         .end((err, res) => {
           expect(res).to.have.status(400);
           expect(res.body).to.be.a("object");
-          expect(res.body.message).to.equal(
-            "Invalid password!"
-          );
+          expect(res.body.message).to.equal("Invalid password!");
           done();
         });
     }),
@@ -210,9 +204,7 @@ describe("Test User Service", function () {
           .end((err, res) => {
             expect(res).to.have.status(400);
             expect(res.body).to.be.a("object");
-            expect(res.body.message).to.equal(
-              "No such user found!"
-            );
+            expect(res.body.message).to.equal("No such user found!");
             done();
           });
       }),
@@ -228,9 +220,7 @@ describe("Test User Service", function () {
           .end((err, res) => {
             expect(res).to.have.status(400);
             expect(res.body).to.be.a("object");
-            expect(res.body.message).to.equal(
-              "Please enter a valid username!"
-            );
+            expect(res.body.message).to.equal("Please enter a valid username!");
             done();
           });
       }),
@@ -246,9 +236,7 @@ describe("Test User Service", function () {
           .end((err, res) => {
             expect(res).to.have.status(400);
             expect(res.body).to.be.a("object");
-            expect(res.body.message).to.equal(
-              "Please enter a valid password!"
-            );
+            expect(res.body.message).to.equal("Please enter a valid password!");
             done();
           });
       }),
@@ -269,7 +257,7 @@ describe("Test User Service", function () {
   });
 
   describe("Test updatePassword function /api/user/update-password", function () {
-    it("should return error 400 for invalid username", (done) => {
+    it("should return error 400 for invalid username length", (done) => {
       chai
         .request(index)
         .put("/api/user/update-password")
@@ -286,72 +274,126 @@ describe("Test User Service", function () {
           done();
         });
     }),
-    it("should return error 400 for invalid old password", (done) => {
-      chai
-        .request(index)
-        .put("/api/user/update-password")
-        .send({
-          username: "testUser1",
-          oldPassword: "0",
-          newPassword: "admin01234",
-          token: testUserToken,
-        })
-        .end((err, res) => {
-          expect(res).to.have.status(400);
-          expect(res.body).to.be.a("object");
-          expect(res.body.message).to.equal("Please enter a valid password!");
-          done();
-        });
-    }),
+      it("should return error 400 for invalid old password length", (done) => {
+        chai
+          .request(index)
+          .put("/api/user/update-password")
+          .send({
+            username: "testUser1",
+            oldPassword: "0",
+            newPassword: "admin01234",
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("Please enter a valid password!");
+            done();
+          });
+      }),
+      it("should return error 400 for empty new password", (done) => {
+        chai
+          .request(index)
+          .put("/api/user/update-password")
+          .send({
+            username: "testUser1",
+            oldPassword: "admin0123",
+            newPassword: "",
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(
+              "Please enter a password with 5 or more characters!"
+            );
+            done();
+          });
+      }),
       it("should return error 400 for invalid new password", (done) => {
         chai
-        .request(index)
-        .put("/api/user/update-password")
-        .send({
-          username: "testUser1",
-          oldPassword: "admin0123",
-          newPassword: "why",
-          token: testUserToken,
-        })
-        .end((err, res) => {
-          expect(res).to.have.status(400);
-          expect(res.body).to.be.a("object");
-          expect(res.body.message).to.equal("Please enter a password with 5 or more characters!");
-          done();
+          .request(index)
+          .put("/api/user/update-password")
+          .send({
+            username: "testUser1",
+            oldPassword: "admin0123",
+            newPassword: "                ",
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(
+              "Please enter a valid new password!"
+            );
+            done();
           });
       }),
       it("should return error 400 for user with valid JWT but invalid username", (done) => {
         chai
-        .request(index)
-        .put("/api/user/update-password")
-        .send({
-          username: "xxxxxxxxxxxx",
-          oldPassword: "admin01234",
-          newPassword: "zzzzzzzzzzzzz",
-          token: testUserToken,
-        })
-        .end((err, res) => {
-          expect(res).to.have.status(400);
-          expect(res.body).to.be.a("object");
-          expect(res.body.message).to.equal("Username linked with JWT is different from username sent!");
-          done();
+          .request(index)
+          .put("/api/user/update-password")
+          .send({
+            username: "xxxxxxxxxxxx",
+            oldPassword: "admin01234",
+            newPassword: "zzzzzzzzzzzzz",
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(
+              "Username linked with JWT is different from username sent!"
+            );
+            done();
           });
       }),
       it("should return error 400 for wrong old password", (done) => {
         chai
-        .request(index)
-        .put("/api/user/update-password")
-        .send({
-          username: `${testUser.username}`,
-          oldPassword: "definitely a wrong password",
-          newPassword: "zzzzzzzzzzzzz",
-          token: testUserToken,
-        })
-        .end((err, res) => {
-          expect(res).to.have.status(400);
-          expect(res.body).to.be.a("object");
-          expect(res.body.message).to.equal("Wrong password!");
-          done();
+          .request(index)
+          .put("/api/user/update-password")
+          .send({
+            username: `${testUser.username}`,
+            oldPassword: "definitely a wrong password",
+            newPassword: "zzzzzzzzzzzzz",
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("Wrong password!");
+            done();
+          });
+      }),
+      it("should return error 403 for missing token", (done) => {
+        chai
+          .request(index)
+          .put("/api/user/update-password")
+          .send(testUser)
+          .end((err, res) => {
+            expect(res).to.have.status(403);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(
+              "A token is required for authentication"
+            );
+            done();
+          });
+      }),
+      it("should return error 401 for invalid token", (done) => {
+        chai
+          .request(index)
+          .put("/api/user/update-password")
+          .send({
+            username: "testUser1",
+            oldPassword: "admin0123",
+            newPassword: "admin01234",
+            token: "faketoken123",
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(401);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("Invalid Token");
+            done();
           });
       }),
       it("should update userPassword successfully", (done) => {
@@ -367,27 +409,123 @@ describe("Test User Service", function () {
           .end((err, res) => {
             expect(res).to.have.status(200);
             expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("Password changed successfully!");
             done();
           });
       });
   });
 
   describe("Test deleteUser function /api/user/delete", function () {
-    it("should delete testUser successfully", (done) => {
+    it("should return error 400 for deleting invalid username", (done) => {
       chai
         .request(index)
         .delete("/api/user/delete")
         .send({
-          username: "testUser1",
+          username: "0",
           password: "admin01234",
           token: testUserToken,
         })
         .end((err, res) => {
-          expect(res).to.have.status(200);
+          expect(res).to.have.status(400);
           expect(res.body).to.be.a("object");
+          expect(res.body.message).to.equal("Please enter a valid username!");
           done();
         });
     }),
+      it("should return error 400 for deleting invalid password", (done) => {
+        chai
+          .request(index)
+          .delete("/api/user/delete")
+          .send({
+            username: "realusername",
+            password: `${testUser.password}`,
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("Username linked with JWT is different from username sent!");
+            done();
+          });
+      }),
+      it("should return error 400 for deleting invalid password", (done) => {
+        chai
+          .request(index)
+          .delete("/api/user/delete")
+          .send({
+            username: `${testUser.username}`,
+            password: "0",
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("Please enter a valid password");
+            done();
+          });
+      }),
+      it("should return error 400 for wrong password", (done) => {
+        chai
+          .request(index)
+          .delete("/api/user/delete")
+          .send({
+            username: `${testUser.username}`,
+            password: "00000000000000",
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("Wrong password!");
+            done();
+          });
+      }),
+      it("should return error 403 for deleting with a missing token", (done) => {
+        chai
+          .request(index)
+          .delete("/api/user/delete")
+          .send(testUser)
+          .end((err, res) => {
+            expect(res).to.have.status(403);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(
+              "A token is required for authentication"
+            );
+            done();
+          });
+      }),
+      it("should return error 401 for deleting with an invalid token", (done) => {
+        chai
+          .request(index)
+          .delete("/api/user/delete")
+          .send({
+            username: `${testUser.username}`,
+            password: `${testUser.password}`,
+            token: "faketoken123",
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(401);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("Invalid Token");
+            done();
+          });
+      }),
+      it("should delete testUser successfully", (done) => {
+        chai
+          .request(index)
+          .delete("/api/user/delete")
+          .send({
+            username: `${testUser.username}`,
+            password: "admin01234",
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("User deleted successfully!");
+            done();
+          });
+      }),
       it("should delete testUser2 successfully", (done) => {
         chai
           .request(index)
@@ -396,6 +534,25 @@ describe("Test User Service", function () {
           .end((err, res) => {
             expect(res).to.have.status(200);
             expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("User deleted successfully!");
+            done();
+          });
+      }),
+      it("should return error 400 for deleting non existent user", (done) => {
+        chai
+          .request(index)
+          .delete("/api/user/delete")
+          .send({
+            username: "testUser1",
+            password: "admin01234",
+            token: testUserToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(
+              "No such user found or JWT expired!"
+            );
             done();
           });
       });

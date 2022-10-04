@@ -93,6 +93,9 @@ export async function updatePassword(params) {
   if (npw.length < 5) {
     throw "Please enter a password with 5 or more characters!"
   }
+  if (npw.trim() == '') {
+    throw "Please enter a valid new password!"
+  }
   if (opw.length < 5) {
     throw 'Please enter a valid password!'
   }
@@ -120,6 +123,9 @@ export async function deleteUser(params) {
   const user = await userModel.findOne({_id: uid})
   if (user == null) {
     throw "No such user found or JWT expired!"
+  }
+  if (user.username != username) {
+    throw "Username linked with JWT is different from username sent!"
   }
   if (password.length < 5) {
     throw 'Please enter a valid password'
