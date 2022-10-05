@@ -8,8 +8,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
-      - name: Change into question-service directory
-        run: cd ./question-service\
+        working-directory: ./question-service  
       - name: Install mocha
         run: npm install -g mocha
       - name: Install dependencies

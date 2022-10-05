@@ -8,8 +8,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
-      - name: Change into user-service directory
-        run: cd ./user-service\
+        working-directory: ./user-service  
       - name: Install mocha
         run: npm install -g mocha
       - name: Install dependencies
