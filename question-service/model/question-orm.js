@@ -31,7 +31,6 @@ export async function ormGetQuestionsByDifficulty(difficulty) {
 
 export async function ormDeleteQuestion(id) {
     try {
-        console.log(constraints);
         const question = await deleteQuestion({id: id});
         return question;
     } catch (err) {

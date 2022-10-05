@@ -16,7 +16,7 @@ const router = express.Router()
 router.post('/create', verifyToken, createQuestion)
 router.get('/', verifyToken, getQuestion)
 router.get('/difficulty', verifyToken, getQuestionsByDifficulty)
-router.get('/delete', verifyToken, deleteQuestion)
+router.delete('/delete', verifyToken, deleteQuestion)
 
 app.use('/api/question', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')

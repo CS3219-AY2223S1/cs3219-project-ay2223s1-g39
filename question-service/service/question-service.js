@@ -31,10 +31,10 @@ export async function getQuestionsByDifficulty(params) {
 
 export async function deleteQuestion(params) {
   const id = params.id;
-  const questionToBeDeleted = await questionModel.findOne({ id: id });
+  const questionToBeDeleted = await questionModel.findOne({ _id: id });
   if (questionToBeDeleted == null) {
     throw "No such question found!";
   }
-  let questions = await questionModel.findOneAndDelete({ id: id });
+  const questions = await questionModel.findOneAndDelete({ _id: id });
   return questions;
 }
