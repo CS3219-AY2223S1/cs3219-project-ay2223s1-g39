@@ -12,10 +12,8 @@ jobs:
         with:
           node-version: '16.x'
       - name: Install mocha
-        run: npm install -g mocha
-      - name: Install latest npm version
-        run: npm install -g npm@latest
+        run: npm install mocha
       - name: Install dependencies
-        run: npm ci 
+        run: npm install
       - name: "Run Test"
         run: npm test
