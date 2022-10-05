@@ -3,10 +3,8 @@ on: [push]
 jobs:
   check-bats-version:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: user-service  
     steps:
+        run: cd  ${{ ./user-service }}
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
