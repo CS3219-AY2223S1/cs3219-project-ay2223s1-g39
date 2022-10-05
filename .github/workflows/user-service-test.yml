@@ -4,7 +4,7 @@ jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
-        run: cd  ${{ ./user-service }}
+        run: cd  ./user-service
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
