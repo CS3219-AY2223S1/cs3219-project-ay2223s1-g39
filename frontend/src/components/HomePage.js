@@ -3,14 +3,65 @@ import { createUseStyles } from 'react-jss';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Button,
+  Grid
 } from "@mui/material";
+import logo from '../assets/logo.png'
 import difficulties from '../utils/difficulties';
 
 const useStyles = createUseStyles({
-  headerContent: {
-    display: "flex",
+  homePage: {
+    height: "100vh"
+  },
+  background: {
+    position: "absolute"
+  },
+  greyTriangle: {
+    width: "100%",
+    height: "100%",
+    background: "conic-gradient(at 50% 50%,transparent 135deg,green 0,green 225deg, transparent 0)"
+  },
+  banner: {
+    margin: "auto",
+    width: "100%",
+    height:"fit-content",
+    backgroundColor: "transparent",
     justifyContent: "space-between",
-    alignItems: "center"
+    display: "flex",
+  },
+  logo: {
+    margin: "20px 0 20px 20px",
+    height: "35px",
+    width: "auto",
+  },
+  logoutButton: {
+    margin: "20px 20px 20px 0",
+  },
+  pageBody: {
+    display: "flex",
+    flexDirection:"column",
+    width: "95%",
+    margin: "auto",
+  },
+  welcomePrompt: {
+    margin: "0 20px 20px 20px",
+    display: "block",
+    padding: "15px 20px 35px 20px",
+    borderRadius: "20px",
+    boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px"
+  },
+  mainContent: {
+    width: "100%",
+    padding: "0 20px",
+    backgroundColor: "pink",
+    margin: "auto",
+  },
+  summaryStatistics: {
+    justifyContent:"center",
+    backgroundColor:"pink",
+    textAlign:"center"
+  },
+  matchFind: {
+
   },
   difficultyButton: {
     margin: "0px 10px"
@@ -79,29 +130,61 @@ const HomePage = () => {
     )
   }
 
-  return (
-    <div> 
-      <div className={classes.headerContent}>
-        <div>
-          <h2>Welcome back {user}!</h2>
-          <h4>Back for another grind?</h4>
+  const renderMatchFindComponent = () => {
+    return (
+      <div>
+        <h3 className={classes.selectionPrompt}>Select your desired difficulty level below:</h3>
+        <div className={classes.selectionBoxesContainer}>
+          {Object.keys(difficulties).map((difficulty) => <SelectionBox key={difficulty} difficulty={difficulty} />)}
         </div>
+        <Button className={`${classes.findMatchBtn}`} variant={"contained"} size={"large"} onClick={handleCreateMatch}>Find me a match!</Button>
+      </div>
+    )
+  }
+
+  return (
+    <div className={classes.homePage}>
+      <div className={classes.background}>
+        <div className={classes.greyTriangle}></div>
+      </div>
+      
+      <div className={classes.banner}>
+        <img src={logo} className={classes.logo}></img>
         <Button
           variant="contained"
           color="error"
           onClick={handleLogout}
-          sx={{ fontWeight: "bold", height: 40 }}
+          sx={{ fontWeight: "bold", height: 35 }}
+          className={classes.logoutButton}
         >
           Logout
         </Button>
       </div>
-      <br/>
-      <h3 className={classes.selectionPrompt}>Select your desired difficulty level below:</h3>
-      <div className={classes.selectionBoxesContainer}>
-        {Object.keys(difficulties).map((difficulty) => <SelectionBox key={difficulty} difficulty={difficulty} />)}
+      
+      <div className={classes.pageBody}>
+        <div className={classes.welcomePrompt}>
+          <h1>Welcome back {user}!</h1>
+          <p><i>Inspiring Quote here. Fetch from some API.</i></p>
+        </div>
+
+        <Grid container className={classes.mainContent}>
+          <Grid item spacing={3} xs={4} sx={{border: "1px solid black"}}>
+            <div className={`${classes.featureCard} ${classes.summaryStatistics}`}>
+              Summary Statistics Component
+            </div>
+          </Grid>
+          <Grid item spacing={3} xs={4} sx={{border: "1px solid red"}}>
+            <div className={`${classes.featureCard} ${classes.matchFind}`}>
+              {renderMatchFindComponent()}
+            </div>
+          </Grid>
+          <Grid item spacing={3} xs={4} sx={{border: "1px solid red"}}>
+            <div className={`${classes.featureCard} ${classes.historyService}`}>
+              Learning History Service
+            </div>
+          </Grid>
+        </Grid>
       </div>
-      <br/>
-      <Button className={`${classes.findMatchBtn}`} variant={"contained"} size={"large"} onClick={handleCreateMatch}>Find me a match!</Button>
     </div>
   )
 }
