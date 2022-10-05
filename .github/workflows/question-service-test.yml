@@ -1,10 +1,14 @@
 name: question-service-test
 on: [push]
+
+defaults:
+  run:
+    working-directory: ./question-service
+
 jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
-        run: cd  ./question-service
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
