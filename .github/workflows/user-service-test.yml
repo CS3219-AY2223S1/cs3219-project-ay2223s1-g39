@@ -11,8 +11,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: "npm"
-          cache-dependency-path: "./user-service/package-lock.json"
       - name: Install mocha
         run: npm install -g mocha
       - name: Install dependencies
