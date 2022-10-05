@@ -14,9 +14,13 @@ jobs:
         with:
           node-version: 16.x
       - name: cd
-        run: cd question-service
+        run: cd ./question-service
       - name: Install dependencies
         run: npm install
+      - name: Install chai-http
+        run: npm install chai-http
+      - name: Install express
+        run: npm install express
       - name: Install formidable@v3
         run: npm install formidable@v3
       - name: Install superagent
