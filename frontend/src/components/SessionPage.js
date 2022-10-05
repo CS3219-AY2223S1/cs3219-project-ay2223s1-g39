@@ -33,7 +33,6 @@ const useStyles = createUseStyles({
     margin: "20px 20px 20px 0",
   },
   questionSpace: {
-    fontFamily: "M PLUS Rounded 1c",
     display: "flex",
     flexDirection: "column",
     height: "80vh",
