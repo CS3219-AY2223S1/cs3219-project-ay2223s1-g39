@@ -1,6 +1,7 @@
 import { ormCreateQuestion as _createQuestion, 
   ormGetQuestion as _getQuestion, 
-  ormGetQuestionsByDifficulty as _getQuestionsByDifficulty 
+  ormGetQuestionsByDifficulty as _getQuestionsByDifficulty ,
+  ormDeleteQuestion as _deleteQuestion
 } from '../model/question-orm.js'
 
 export async function createQuestion(req, res) {
@@ -56,3 +57,16 @@ export async function getQuestionsByDifficulty(req, res) {
           return res.status(500).json({message: 'Database failure when getting questions!'})
       }
   }
+
+  export async function deleteQuestion(req, res) {
+    try {
+        const { id } = req.body;
+        const resp = await _deleteQuestion(id);
+        if (resp.err) {
+            return res.status(400).json({message: resp.err});
+        }
+        return res.status(200).json({message: "Question deleted successfully!", question: resp})
+    } catch (err) {
+        return res.status(500).json({message: 'Database failure when deleting question!'})
+    }
+}
