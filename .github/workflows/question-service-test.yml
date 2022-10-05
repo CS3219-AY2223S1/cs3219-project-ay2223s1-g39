@@ -15,5 +15,9 @@ jobs:
           node-version: '16.x'
       - name: Install dependencies
         run: npm install
+      - name: Install formidable@v3
+        run: npm install formidable@v3
+       - name: Install superagent
+        run: npm install superagent
       - name: "Run Test"
         run: npm test
