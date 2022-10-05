@@ -9,7 +9,7 @@ jobs:
         with:
           node-version: '14'
       - name: Change into question-service directory
-        run: cd .\question-service\
+        run: cd ./question-service\
       - name: Install mocha
         run: npm install -g mocha
       - name: Install dependencies

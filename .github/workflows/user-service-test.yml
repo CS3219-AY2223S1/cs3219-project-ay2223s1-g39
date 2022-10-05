@@ -9,7 +9,7 @@ jobs:
         with:
           node-version: '14'
       - name: Change into user-service directory
-        run: cd .\user-service\
+        run: cd ./user-service\
       - name: Install mocha
         run: npm install -g mocha
       - name: Install dependencies
