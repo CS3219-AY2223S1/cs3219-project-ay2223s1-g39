@@ -4,6 +4,9 @@ on: [push]
 jobs:
   test-question-service:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./question-service
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -11,7 +14,6 @@ jobs:
           node-version: 16.x
           cache: 'npm'
           cache-dependency-path: question-service/package-lock.json
-        working-directory: ./question-service
       - run: |
          npm ci
          npm update
