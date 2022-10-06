@@ -35,13 +35,13 @@ jobs:
         run: |
           npm ci
           npm update
-        working-directory: question-service
+        working-directory: ./question-service
       - name: Test    
         run: |
           npm ci
           npm update
-        working-directory: user-service
+        working-directory: ./user-service
       - name: Run question service test cases    
         run: npm test
-        working-directory: question-service
+        working-directory: ./question-service
           
