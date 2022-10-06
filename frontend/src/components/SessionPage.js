@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Grid, Select, MenuItem } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import starterCode from "../utils/startercode";
 import difficulties from "../utils/difficulties";
 import CodeEditor from "@uiw/react-textarea-code-editor";
+import { useSyncState } from "../SyncProvider"
 import { createUseStyles } from 'react-jss';
 import logo from '../assets/logo.png'
 import "../index.css";
@@ -115,8 +116,15 @@ const SessionPage = () => {
   const { state } = useLocation();
   const {roomId, partner, difficulty, question} = state;
   const [language, setLanguage] = useState("java");
-  const [code, setCode] = useState(starterCode[language]);
+  const [query, setQuery] = useState("");
+  const [code, setCode] = useSyncState(`${roomId}`);
   const classes = useStyles();
+
+  // this helps to reduce the number of times setState is called, reducing funkiness while typing 
+  useEffect(() => {
+    const timeOutId = setTimeout(() => setCode(query), 600);
+    return () => clearTimeout(timeOutId);
+  }, [query]);
 
   const handleLanguageChange = (e) => {
     setLanguage(e.target.value);
@@ -189,7 +197,7 @@ const SessionPage = () => {
                   value={code}
                   language={language}
                   placeholder="Type your code here!"
-                  onChange={(e) => setCode(e.target.value)}
+                  onChange={(e) => setQuery(e.target.value)}
                   padding={15}
                   style={{
                     fontSize: 14,
@@ -209,7 +217,6 @@ const SessionPage = () => {
         </Grid>
       </div>
     </div>
-
   );
 };
 
