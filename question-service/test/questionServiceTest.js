@@ -26,7 +26,7 @@ describe("Test Question Service", function () {
   };
 
   let testUser = {
-    username: "testUser1",
+    username: "questionServiceTestUser",
     password: "admin0123",
   };
 
