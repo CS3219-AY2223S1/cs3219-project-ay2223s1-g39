@@ -7,16 +7,24 @@ import HomePage from './components/HomePage';
 import SessionPage from './components/SessionPage';
 import {Box} from "@mui/material";
 import SyncProvider from "./SyncProvider"
+import {createUseStyles} from 'react-jss';
+
+const useStyles = createUseStyles({
+  app: {
+    height: "100vh"
+  }
+})
 
 function App() {
-
+    const classes = useStyles();
+    
     const getToken = async () => {
-        const response = await fetch('http://localhost:3001/tokens', {
-          method: 'POST',
-        });
-        const data = await response.json();
-        return data.token;
-      };
+      const response = await fetch('http://localhost:3001/tokens', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      return data.token;
+    };
 
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -33,33 +41,31 @@ function App() {
     }
 
     return (
-        <div className="App">
-            <Box display={"flex"} flexDirection={"column"} padding={"1.5rem"}>
-                <Router>
-                    <Routes>
-                        <Route exact path="/" element={<Navigate replace to="/login" />}></Route>
-                        <Route path="/login" element={<LoginPage/>}/>
-                        <Route path="/signup" element={<SignupPage/>}/>
-                        <Route path='/matching' element={
-                            <RequireAuth>
-                                <MatchingPage/>
-                            </RequireAuth>
-                        }/>
-                        <Route path="/home" element={
-                            <RequireAuth>
-                                <HomePage/>
-                            </RequireAuth>
-                        }/>
-                        <Route path="/session" element={
-                            <RequireAuth>
-                                <SyncProvider tokenFunc={getToken}>
-                                    <SessionPage/>
-                                </SyncProvider>
-                            </RequireAuth>
-                        }/>
-                    </Routes>
-                </Router>
-            </Box>
+        <div className={classes.app}>
+          <Router>
+              <Routes>
+                  <Route exact path="/" element={<Navigate replace to="/login" />}></Route>
+                  <Route path="/login" element={<LoginPage/>}/>
+                  <Route path="/signup" element={<SignupPage/>}/>
+                  <Route path='/matching' element={
+                      <RequireAuth>
+                          <MatchingPage/>
+                      </RequireAuth>
+                  }/>
+                  <Route path="/home" element={
+                      <RequireAuth>
+                          <HomePage/>
+                      </RequireAuth>
+                  }/>
+                  <Route path="/session" element={
+                      <RequireAuth>
+                        <SyncProvider tokenFunc={getToken}>
+                            <SessionPage/>
+                        </SyncProvider>
+                      </RequireAuth>
+                  }/>
+              </Routes>
+          </Router>
         </div>
     );
 }
