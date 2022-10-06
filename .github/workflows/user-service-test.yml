@@ -11,12 +11,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-          cache: 'npm'
-          cache-dependency-path: user-service/package-lock.json
-      - run: |
-         cd user-service
-         npm ci
-         npm update
-         npm test
+      with:
+        node-version: 16.x
+        cache: 'npm'
+        cache-dependency-path: user-service/package-lock.json
+    - run: |
+        cd user-service
+        npm ci
+        npm update
+        npm test
