@@ -5,9 +5,17 @@ import SignupPage from './components/SignupPage';
 import MatchingPage from './components/MatchingPage';
 import HomePage from './components/HomePage';
 import SessionPage from './components/SessionPage';
-import {Box} from "@mui/material";
+import {createUseStyles} from 'react-jss';
+
+const useStyles = createUseStyles({
+  app: {
+    height: "100vh"
+  }
+})
 
 function App() {
+    const classes = useStyles();
+
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -23,31 +31,29 @@ function App() {
     }
 
     return (
-        <div className="App">
-            <Box display={"flex"} flexDirection={"column"} padding={"1.5rem"}>
-                <Router>
-                    <Routes>
-                        <Route exact path="/" element={<Navigate replace to="/login" />}></Route>
-                        <Route path="/login" element={<LoginPage/>}/>
-                        <Route path="/signup" element={<SignupPage/>}/>
-                        <Route path='/matching' element={
-                            <RequireAuth>
-                                <MatchingPage/>
-                            </RequireAuth>
-                        }/>
-                        <Route path="/home" element={
-                            <RequireAuth>
-                                <HomePage/>
-                            </RequireAuth>
-                        }/>
-                        <Route path="/session" element={
-                            <RequireAuth>
-                                <SessionPage/>
-                            </RequireAuth>
-                        }/>
-                    </Routes>
-                </Router>
-            </Box>
+        <div className={classes.app}>
+          <Router>
+              <Routes>
+                  <Route exact path="/" element={<Navigate replace to="/login" />}></Route>
+                  <Route path="/login" element={<LoginPage/>}/>
+                  <Route path="/signup" element={<SignupPage/>}/>
+                  <Route path='/matching' element={
+                      <RequireAuth>
+                          <MatchingPage/>
+                      </RequireAuth>
+                  }/>
+                  <Route path="/home" element={
+                      <RequireAuth>
+                          <HomePage/>
+                      </RequireAuth>
+                  }/>
+                  <Route path="/session" element={
+                      <RequireAuth>
+                          <SessionPage/>
+                      </RequireAuth>
+                  }/>
+              </Routes>
+          </Router>
         </div>
     );
 }
