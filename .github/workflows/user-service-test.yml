@@ -15,8 +15,10 @@ jobs:
           node-version: 16.x
           cache: "npm"
           cache-dependency-path: "user-service/package-lock.json"
-      - name: Download dependencies and run test cases    
+      - name: Download dependencies   
         run: |
           npm ci
           npm update
-          npm test
+      - name: Download dependencies and run test cases    
+        run: npm test
+          
