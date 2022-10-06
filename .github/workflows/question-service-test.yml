@@ -11,8 +11,8 @@ jobs:
           node-version: 16.x
           cache: 'npm'
           cache-dependency-path: question-service/package-lock.json
+        working-directory: ./question-service
       - run: |
-         cd question-service
          npm ci
          npm update
          npm test

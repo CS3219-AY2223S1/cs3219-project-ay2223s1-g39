@@ -15,8 +15,8 @@ jobs:
         node-version: 16.x
         cache: 'npm'
         cache-dependency-path: user-service/package-lock.json
+      working-directory: ./user-service
     - run: |
-        cd user-service
         npm ci
         npm update
         npm test
