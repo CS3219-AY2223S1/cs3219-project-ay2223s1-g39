@@ -39,6 +39,12 @@ jobs:
         run: |
           npm ci
           npm update
+      - name: Test    
+        run: |
+          cd ..
+          cd user-service
+          npm ci
+          npm update
       - name: Run question service test cases    
         run: npm test
           
