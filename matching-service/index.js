@@ -98,7 +98,7 @@ io.on('connection', (socket) => {
       room.waitingUser = username;
       room.waitingUserSocket = socket;
       
-      room.matchFailure = setTimeout(() => alertMatchFailure(waitingRooms, difficulty), 30100);
+      room.matchFailure = setTimeout(() => alertMatchFailure(waitingRooms, difficulty), 31000);
     
     } else {
       const newMatch = await createMatch(room.waitingUser, username, difficulty, room.question);
@@ -119,6 +119,11 @@ io.on('connection', (socket) => {
       
       resetWaitingRoom(room);
     }
+  })
+
+  socket.on("cancelMatch", async (data) => {
+    const { difficulty } = data;
+    resetWaitingRoom(waitingRooms[difficulty]);
   })
 })
 
