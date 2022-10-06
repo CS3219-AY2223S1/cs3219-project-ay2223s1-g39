@@ -20,13 +20,19 @@
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.4",
     "socket.io-client": "^4.5.2",
+    "twilio-sync": "^3.2.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "twilio": "cd src/Twilio && npm install && npm start",
+    "matching-service": "cd ../matching-service && npm install && npm run dev",
+    "question-service": "cd ../question-service && npm install && npm run dev",
+    "user-service": "cd ../user-service && npm install && npm run dev",
+    "dev": "concurrently \"npm install && npm start\" \"npm run twilio\" \"npm run matching-service\" \"npm run question-service\" \"npm run user-service\""
   },
   "eslintConfig": {
     "extends": [
@@ -47,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^7.4.0",
     "eslint": "^8.21.0",
     "eslint-plugin-react": "^7.30.1"
   }
