@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Button, Grid, Select, MenuItem } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Button, Grid, Select, MenuItem, Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 import starterCode from "../utils/startercode";
 import difficulties from "../utils/difficulties";
 import CodeEditor from "@uiw/react-textarea-code-editor";
@@ -108,15 +111,27 @@ const useStyles = createUseStyles({
   textArea: {
     overflowY: "scroll",
     borderRadius: "10px",
+  },
+  exitDialogContainer: {
+    borderRadius: "10px",
+    boxShadow: "box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px"
+  }, 
+  exitDialogOptions: {
+    textTransform: "none",
+    fontWeight: "bold",
+    margin: "5px",
+    height: "30px"
   }
 })
 
 const SessionPage = () => {
+  const navigate = useNavigate();
   const { state } = useLocation();
   const {roomId, partner, difficulty, question} = state;
   const [language, setLanguage] = useState("java");
   const [query, setQuery] = useState("");
   const [code, setCode] = useSyncState(`${roomId}`);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const classes = useStyles();
 
   // this helps to reduce the number of times setState is called, reducing funkiness while typing 
@@ -130,6 +145,10 @@ const SessionPage = () => {
     setCode(starterCode[e.target.value]);
   }
 
+  const openDialog = () => setIsDialogOpen(true);
+
+  const closeDialog = () => setIsDialogOpen(false);
+
   return (
     <div className={classes.mainContent}>
       <div className={classes.banner}>
@@ -137,8 +156,7 @@ const SessionPage = () => {
         <Button
           variant="contained"
           color="error"
-          component={Link}
-          to="/home"
+          onClick={openDialog}
           sx={{ fontWeight: "bold", height: 40 }}
           className={classes.endSessionButton}
         >
@@ -215,6 +233,25 @@ const SessionPage = () => {
           </Grid>
         </Grid>
       </div>
+      <Dialog open={isDialogOpen} onClose={closeDialog} className={classes.exitDialog}>
+        <DialogContent>
+          <DialogContentText sx={{ textAlign: "center", fontWeight: "bold" }}>
+            You are about to leave your current session. Continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => navigate('/home')} className={classes.exitDialogOptions}>
+            <p style={{ fontWeight: "bold", color: "red"}}>
+              Confirm
+            </p>
+          </Button>
+          <Button onClick={closeDialog} className={classes.exitDialogOptions}>
+            <p>
+              Return
+            </p>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
