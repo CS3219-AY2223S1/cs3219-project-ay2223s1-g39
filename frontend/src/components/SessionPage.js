@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Grid, Select, MenuItem } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import starterCode from "../utils/startercode";
@@ -197,7 +197,7 @@ const SessionPage = () => {
                   value={code}
                   language={language}
                   placeholder="Type your code here!"
-                  onChange={(e) => setCode(e.target.value)}
+                  onChange={(e) => setQuery(e.target.value)}
                   padding={15}
                   style={{
                     fontSize: 14,
