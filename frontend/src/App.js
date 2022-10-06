@@ -5,6 +5,7 @@ import SignupPage from './components/SignupPage';
 import MatchingPage from './components/MatchingPage';
 import HomePage from './components/HomePage';
 import SessionPage from './components/SessionPage';
+import SyncProvider from "./SyncProvider"
 import {createUseStyles} from 'react-jss';
 
 const useStyles = createUseStyles({
@@ -15,6 +16,14 @@ const useStyles = createUseStyles({
 
 function App() {
     const classes = useStyles();
+    
+    const getToken = async () => {
+      const response = await fetch('http://localhost:3001/tokens', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      return data.token;
+    };
 
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -49,7 +58,9 @@ function App() {
                   }/>
                   <Route path="/session" element={
                       <RequireAuth>
-                          <SessionPage/>
+                        <SyncProvider tokenFunc={getToken}>
+                            <SessionPage/>
+                        </SyncProvider>
                       </RequireAuth>
                   }/>
               </Routes>
