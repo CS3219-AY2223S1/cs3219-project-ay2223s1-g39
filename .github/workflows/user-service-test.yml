@@ -16,7 +16,7 @@ jobs:
           cache: "npm"
           cache-dependency-path: "user-service/package-lock.json"
       - name: Download dependencies and run test cases    
-      - run: |
+        run: |
           npm ci
           npm update
           npm test
