@@ -26,9 +26,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    # defaults:
-    #   run:
-    #     working-directory: question-service
+    defaults:
+      run:
+        working-directory: question-service
 
     steps:
       - uses: actions/checkout@v3
@@ -37,13 +37,12 @@ jobs:
           node-version: 16.x
       - name: Download dependencies   
         run: |
-          cd user-service   
           npm ci
           npm update
       - name: Test    
         run: |
           cd ..
-          cd question-service
+          cd user-service
           npm ci
           npm update
       - name: Run question service test cases    
