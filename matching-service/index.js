@@ -33,6 +33,8 @@ app.use('/api/match', router).all((_, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
 })
 
+let gameRooms = {};
+
 let waitingRooms = {
   easy: {
     waitingUser: null,
@@ -116,8 +118,23 @@ io.on('connection', (socket) => {
         difficulty: difficulty,
         question: room.question
       })
-      
       resetWaitingRoom(room);
+    }
+  })
+
+  socket.on('joinRoom', (data) => {
+    if (!gameRooms[data.roomId]) {
+      gameRooms[data.roomId] = 2;
+    }
+    socket.join(data.roomId);
+  })
+
+  socket.on("leaveRoom", async (data) => {
+    gameRooms[data.roomId] = gameRooms[data.roomId] - 1;
+    if (gameRooms[data.roomId] === 0) {
+      delete gameRooms[data.roomId];
+    } else {
+      socket.to(data.roomId).emit('alertLeaveRoom');
     }
   })
 
