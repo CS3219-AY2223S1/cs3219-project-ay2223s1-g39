@@ -25,7 +25,7 @@ export async function createQuestion(req, res) {
 
 export async function getQuestion(req, res) {
     try {
-        const { id } = req.body;
+        const { id } = req.query;
         const resp = await _getQuestion(id);
         if (resp == null) {
             return res.status(404).json({message: 'Question does not exist!'})
