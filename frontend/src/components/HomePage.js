@@ -68,13 +68,13 @@ const useStyles = createUseStyles({
     padding: "15px 15px",
     borderRadius: "10px",
     maxWidth:"100%",
-    maxHeight: "100%"
+    maxHeight: "100%",
   },
   featureCardPrompt: {
     display: "flex",
     justifyContent: "center",
-    lineHeight: "0.6",
-    marginBottom: "0"
+    lineHeight: "1",
+    margin: "0 0 0 10px"
   },
   sortByDiv: {
     display: "flex",
@@ -97,18 +97,20 @@ const useStyles = createUseStyles({
     margin: "0px 10px"
   },
   selectionBoxesContainer: {
+    display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     borderRadius: "10px",
-    width: "fit-content",
+    width: "100%",
     margin: "auto",
   },
   selectionBox: {
     border: "1px solid #0275d8",
     borderRadius: "10px",
-    margin: "15px",
+    margin: "15px auto",
     display: "flex",
     height: "30px",
-    width: "200px",
+    width: "60%",
     alignItems: "center",
     padding: "10px 20px",
     fontSize: "20px",
