@@ -9,6 +9,7 @@ import difficulties from "../utils/difficulties";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { useSyncState } from "../SyncProvider"
 import { createUseStyles } from 'react-jss';
+import { io } from 'socket.io-client';
 import logo from '../assets/logo.png'
 import "../index.css";
 
@@ -124,6 +125,8 @@ const useStyles = createUseStyles({
   }
 })
 
+const socket = io.connect("http://localhost:8001");
+
 const SessionPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -131,7 +134,8 @@ const SessionPage = () => {
   const [language, setLanguage] = useState("java");
   const [query, setQuery] = useState("");
   const [code, setCode] = useSyncState(`${roomId}`);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isExitDialogOpen, setIsExitDialogOpen] = useState(false);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const classes = useStyles();
 
   // this helps to reduce the number of times setState is called, reducing funkiness while typing 
@@ -145,9 +149,26 @@ const SessionPage = () => {
     setCode(starterCode[e.target.value]);
   }
 
-  const openDialog = () => setIsDialogOpen(true);
+  const openExitDialog = () => {
+    setIsExitDialogOpen(true);
+  }
 
-  const closeDialog = () => setIsDialogOpen(false);
+  const closeExitDialog = () => setIsExitDialogOpen(false);
+
+  const openAlertDialog = () => {
+    setIsAlertDialogOpen(true);
+  }
+
+  const closeAlertDialog = () => setIsAlertDialogOpen(false);
+
+  const returnToHome = () => {
+    socket.emit(`leaveRoom`, { roomId: roomId });
+    navigate('/home');
+  }
+
+  socket.emit('joinRoom', {roomId: roomId});
+
+  socket.on(`alertLeaveRoom`, () => setIsAlertDialogOpen(true));
 
   return (
     <div className={classes.mainContent}>
@@ -156,7 +177,7 @@ const SessionPage = () => {
         <Button
           variant="contained"
           color="error"
-          onClick={openDialog}
+          onClick={openExitDialog}
           sx={{ fontWeight: "bold", height: 40 }}
           className={classes.endSessionButton}
         >
@@ -233,21 +254,36 @@ const SessionPage = () => {
           </Grid>
         </Grid>
       </div>
-      <Dialog open={isDialogOpen} onClose={closeDialog} className={classes.exitDialog}>
+      <Dialog open={isExitDialogOpen} onClose={closeExitDialog} className={classes.exitDialog}>
         <DialogContent>
           <DialogContentText sx={{ textAlign: "center", fontWeight: "bold" }}>
-            You are about to leave your current session. Continue?
+            You are about the leave to room. Continue?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => navigate('/home')} className={classes.exitDialogOptions}>
+          <Button onClick={returnToHome} className={classes.exitDialogOptions}>
             <p style={{ fontWeight: "bold", color: "red"}}>
               Confirm
             </p>
           </Button>
-          <Button onClick={closeDialog} className={classes.exitDialogOptions}>
+          <Button onClick={closeExitDialog} className={classes.exitDialogOptions}>
             <p>
               Return
+            </p>
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={isAlertDialogOpen} onClose={closeAlertDialog} className={classes.exitDialog}>
+        <DialogContent>
+          <DialogContentText sx={{ textAlign: "center", fontWeight: "bold" }}>
+            Oh no! It seems like your partner has left the room.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeAlertDialog} className={classes.exitDialogOptions}>
+            <p>
+              Got it
             </p>
           </Button>
         </DialogActions>
