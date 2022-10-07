@@ -82,7 +82,7 @@ const useStyles = createUseStyles({
     width: "95%",
     backgroundColor: "#eeeeee",
     fontSize: "13px",
-    fontFamily: "source code pro",
+    fontFamily: "Roboto Mono",
     borderRadius: "10px",
     padding: "10px",
   },
