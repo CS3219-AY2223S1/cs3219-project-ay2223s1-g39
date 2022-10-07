@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
 import { useNavigate, Link } from 'react-router-dom';
@@ -5,14 +6,14 @@ import {
   Button,
   Grid
 } from "@mui/material";
-import logo from '../assets/logo.png'
-import footer from '../assets/homePageImage.svg'
+import logo from '../assets/logo.png';
+import homePageImage from '../assets/homePageImage.svg'
 import difficulties from '../utils/difficulties';
 
 const useStyles = createUseStyles({
   homePage: {
     height: "100vh",
-    backgroundColor: "#b5dce9"
+    backgroundColor: "#b5dce9",
   },
   banner: {
     marginBottom: "20px",
@@ -38,12 +39,13 @@ const useStyles = createUseStyles({
     margin: "auto",
   },
   welcomePrompt: {
-    margin: "0 20px 40px 20px",
+    margin: "0 20px 20px 20px",
     display: "block",
-    padding: "15px 20px 35px 20px",
+    padding: "15px 20px 20px 20px",
     borderRadius: "20px",
     backgroundColor: "white",
-    boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px"
+    boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px",
+    lineHeight: "0.8"
   },
   mainContent: {
     display: "flex",
@@ -61,14 +63,35 @@ const useStyles = createUseStyles({
     flexDirection: "column",
     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
     backgroundColor: "white",
-    width: "400px",
-    height: "400px",
+    width: "80%",
+    height: "350px",
     padding: "15px 15px",
-    borderRadius: "10px"
+    borderRadius: "10px",
+    maxWidth:"100%",
+    maxHeight: "100%"
   },
   featureCardPrompt: {
     display: "flex",
     justifyContent: "center",
+    lineHeight: "0.6",
+    marginBottom: "0"
+  },
+  sortByDiv: {
+    display: "flex",
+    justifyContent: "center",
+    fontSize: "14px",
+    color: "#cccccc"
+  },
+  sortByButton: {
+    background: "transparent",
+    border: "none",
+    fontSize: "14px",
+    color: "#cccccc"
+  },
+  sortBySelected: {
+    color: "#767676",
+    fontWeight: "bold",
+    textDecoration: "underline"
   },
   difficultyButton: {
     margin: "0px 10px"
@@ -84,8 +107,8 @@ const useStyles = createUseStyles({
     borderRadius: "10px",
     margin: "15px",
     display: "flex",
-    height: "40px",
-    width: "250px",
+    height: "30px",
+    width: "200px",
     alignItems: "center",
     padding: "10px 20px",
     fontSize: "20px",
@@ -105,15 +128,48 @@ const useStyles = createUseStyles({
     backgroundColor: "#0275d8",
     color: "white"
   },
-  footerDesign: {
+  recentAttemptsContent: {
+    margin: "0 10px",
+    overflow: "scroll"
+  },
+  recentAttemptEntry: {
+    display: "flex",
+    alignContent: "bottom"
+  },
+  easy: {
+    color: "#95b634",
+    fontSize: "16px",
+    fontWeight: "bold"
+  },
+  medium: {
+    color: "#fda172",
+    fontSize: "16px",
+    fontWeight: "bold"
+  },
+  hard: {
+    color: "#ed2939",
+    fontSize: "16px",
+    fontWeight: "bold"
+  },
+  attemptDate: {
+    marginLeft: "10px",
+    color: "#cccccc",
+    fontSize: "16px",
+    fontStyle: "italic",
+  },
+  homePageImage: {
     position: "absolute",
-    height: "500px",
-    width: "500px",
+    width: "30%",
     bottom: "0",
-    right: "0",
-    zIndex: "0"
+    right: "2.5%",
   }
 })
+
+const difficultyMap = {
+  easy: 1,
+  medium: 2,
+  hard: 3
+}
 
 const HomePage = () => {
   const classes = useStyles();
@@ -121,7 +177,12 @@ const HomePage = () => {
 
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   const [user, setUser] = useState(localStorage.getItem('username') || 'User');
+  const [history, setHistory] = useState({})
+  const [historyByDate, setHistoryByDate] = useState({});
+  const [historyByDifficulty, setHistoryByDifficulty] = useState({});
   const [quote, setQuote] = useState('');
+  const [cleared, setCleared] = useState({easy: 0, medium: 0, hard: 0})
+  const [sortHistoryBy, setSortHistoryBy] = useState("date");
 
   // Fetch quote for header card
   useEffect(() => {
@@ -130,6 +191,25 @@ const HomePage = () => {
       .then((data) => setQuote(data[Math.floor(Math.random() * data.length)]))
   }, [])
 
+  useEffect(() => {
+    const reqConfig = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({user: `${user}`})
+    }
+    fetch(`http://localhost:8003/api/history?${document.cookie}`, reqConfig)
+      .then((res) => res.json())
+      .then((data) => {
+        const dataHistoryByDate = [...data.history].reverse();
+        setHistoryByDate(dataHistoryByDate)
+        setHistory(dataHistoryByDate);
+
+        const dataHistoryByDifficulty = [...data.history].sort((a, b) => difficultyMap[a.difficulty] - difficultyMap[b.difficulty]);
+        setHistoryByDifficulty(dataHistoryByDifficulty);
+      })
+  }, []);
 
   const handleLogout = () => {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;" // Force token to expire.
@@ -140,6 +220,21 @@ const HomePage = () => {
 
   const handleDifficultySelection = (difficulty) => {
     setSelectedDifficulty(difficulty);
+  }
+
+  const handleSortByChange = (sortBySelected) => {
+    setSortHistoryBy(sortBySelected);
+    if (sortBySelected === 'date') {
+      console.log("date");
+      console.log(historyByDate);
+      setHistory(historyByDate);
+    } else if (sortBySelected === 'difficulty') {
+      console.log("diffculty");
+      console.log(historyByDifficulty);
+      setHistory(historyByDifficulty);
+    } else {
+      throw new Error("Unknown sort parameter.")
+    }
   }
 
   const handleCreateMatch = () => {
@@ -168,18 +263,38 @@ const HomePage = () => {
     )
   }
 
-  const renderSummaryStatisticsComponent = () => {
-    return (
-      <div className={classes.featureCard}>
-        <h2 className={classes.featureCardPrompt}>Summary</h2>
-      </div>
-    )
-  }
-
   const renderLearningHistoryComponent = () => {
     return (
       <div className={classes.featureCard}>
-        <h2 className={classes.featureCardPrompt}>Recent Attempts</h2>
+        <h2 className={classes.featureCardPrompt}>Most Recent Attempts</h2>
+        <div className={classes.sortByDiv}>
+          <p>Sort By:
+            <button 
+              className={`${classes.sortByButton} ${sortHistoryBy === 'date' ? classes.sortBySelected : ''}`}
+              onClick={() => handleSortByChange('date')}
+              value="date"
+            >Date (Most Recent)</button>
+            |
+            <button 
+              className={`${classes.sortByButton} ${sortHistoryBy === 'difficulty' ? classes.sortBySelected : ''}`}
+              onClick={() => handleSortByChange('difficulty')}
+            >Difficulty</button></p>
+        </div>
+        { history.length === 0 && <p className={classes.noAttemptsPrompt}>No recent attempts found.</p>}
+        { history.length > 0 && 
+          <div className={classes.recentAttemptsContent}>
+            { history.map((prev) => {
+              return (
+                <div className={classes.recentAttemptEntry}>
+                  <p className={`${classes.recentAttemptTitle} ${classes[prev.difficulty]}`}>
+                    {prev.question}
+                  </p>
+                  <p className={classes.attemptDate}>{`${new Date(prev.attemptedAt).toLocaleDateString()}`}</p>
+                </div>
+              )
+            })}
+          </div>
+        }
       </div>
     )
   }
@@ -206,9 +321,9 @@ const HomePage = () => {
         </div>
 
         <Grid container className={classes.mainContent}>
-          <Grid item xs={4}>
+        <Grid item xs={4}>
             <div className={`${classes.featureCardContainer}`}>
-              {renderSummaryStatisticsComponent()}
+              {renderLearningHistoryComponent()}
             </div>
           </Grid>
           <Grid item xs={4}>
@@ -216,14 +331,11 @@ const HomePage = () => {
               {renderMatchFindComponent()}
             </div>
           </Grid>
-          <Grid item xs={4}>
-            <div className={`${classes.featureCardContainer}`}>
-              {renderLearningHistoryComponent()}
-            </div>
-          </Grid>
         </Grid>
       </div>
-      {/*<img className={classes.footerDesign} src={footer} alt="footer-img"></img> */}
+      <div className={classes.homePageImage}>
+        <img src={homePageImage} alt="homepage-image"></img>
+      </div>
     </div>
   )
 }
