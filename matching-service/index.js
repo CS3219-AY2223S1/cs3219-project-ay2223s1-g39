@@ -71,7 +71,7 @@ async function generateQuestionforRoom(token, difficulty, room) {
 
   return axios.get(`${process.env.URL_QUESTION_SVC}/difficulty`, {params})
     .then((res) => res.data.question)
-    .then((questions) => questions[Math.floor(Math.random(questions.length))])
+    .then((questions) => questions[Math.floor(Math.random() * questions.length)])
     .then((question) => (room.question = question))
     .catch((err) => console.log(err));
 }
