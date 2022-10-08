@@ -3,6 +3,7 @@ import chai from "chai";
 import chaiHttp from "chai-http";
 import index from "../index.js";
 import userServiceIndex from "../../user-service/index.js";
+import jwt from 'jsonwebtoken'
 const expect = chai.expect;
 let should = chai.should();
 
@@ -11,8 +12,14 @@ chai.use(chaiHttp);
 chai.should();
 
 describe("Test Question Service", function () {
-  let validToken;
-  let testQuestionId = {};
+
+  const validToken = jwt.sign(
+    { user_id: "123" },
+    process.env.TOKEN_KEY,
+    {
+      expiresIn: "2h",
+    }
+  );
 
   let testQuestion = {
     difficulty: "medium",
@@ -23,50 +30,18 @@ describe("Test Question Service", function () {
       ["Input: x = 2", "Output: x = 2"],
     ],
     constraints: ["x < 1000000", "I don't know what else there are"],
+    token: validToken
   };
-
-  let testUser = {
-    username: "questionServiceTestUser",
-    password: "admin0123",
-  };
-
-  before("Signup testUser", (done) => {
-    chai
-      .request(userServiceIndex)
-      .post("/api/user/signup")
-      .set("Accept", "application/json")
-      .send(testUser)
-      .end((err, res) => {
-        // expect(res).to.have.status(201);
-        console.log(res.body.message)
-        done();
-      });
-  });
-
-  before("Login testUser", (done) => {
-    chai
-      .request(userServiceIndex)
-      .post("/api/user/login")
-      .set("Accept", "application/json")
-      .send(testUser)
-      .end((err, res) => {
-        validToken = res.body.user.token;
-        testQuestion["token"] = validToken;
-        testQuestionId["token"] = validToken;
-        expect(res).to.have.status(200);
-        done();
-      });
-  });
 
   describe("Test createQuestion function /api/question/create", function () {
-    it("should create question", (done) => {
+    it("should create real question", (done) => {
       chai
         .request(index)
         .post("/api/question/create")
         .send(testQuestion)
         .end((err, res) => {
           expect(res).to.have.status(201);
-          testQuestionId["id"] = res.body.question._id;
+          testQuestion["id"] = res.body.question._id;
           expect(res.body).to.be.a("object");
           expect(res.body.message).to.equal(
             "Created new question successfully"
@@ -150,7 +125,7 @@ describe("Test Question Service", function () {
       chai
         .request(index)
         .get("/api/question/")
-        .send(testQuestionId)
+        .send(testQuestion)
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.a("object");
@@ -178,7 +153,7 @@ describe("Test Question Service", function () {
           .request(index)
           .get("/api/question/")
           .send({
-            id: `${testQuestionId}`,
+            id: `${testQuestion.id}`,
             token: `whatever`,
           })
           .end((err, res) => {
@@ -193,7 +168,7 @@ describe("Test Question Service", function () {
           .request(index)
           .get("/api/question/")
           .send({
-            id: `${testQuestionId}`,
+            id: `${testQuestion.id}`,
           })
           .end((err, res) => {
             expect(res).to.have.status(403);
@@ -263,30 +238,13 @@ describe("Test Question Service", function () {
         chai
           .request(index)
           .delete("/api/question/delete")
-          .send(testQuestionId)
+          .send(testQuestion)
           .end((err, res) => {
             expect(res).to.have.status(200);
             expect(res.body).to.be.a("object");
             expect(res.body.message).to.equal("Question deleted successfully!");
             done();
           });
-      });
-  });
-
-  after("should delete testUser successfully", (done) => {
-    chai
-      .request(userServiceIndex)
-      .delete("/api/user/delete")
-      .send({
-        username: `${testUser.username}`,
-        password: `${testUser.password}`,
-        token: validToken,
-      })
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.be.a("object");
-        expect(res.body.message).to.equal("User deleted successfully!");
-        done();
       });
   });
 });

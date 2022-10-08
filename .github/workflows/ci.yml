@@ -26,6 +26,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: question-service
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -35,13 +39,6 @@ jobs:
         run: |
           npm ci
           npm update
-        working-directory: ./question-service
-      - name: Test    
-        run: |
-          npm ci
-          npm update
-        working-directory: ./user-service
       - name: Run question service test cases    
         run: npm test
-        working-directory: ./question-service
           
