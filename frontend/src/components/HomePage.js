@@ -1,9 +1,12 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
   Grid
 } from "@mui/material";
 import logo from '../assets/logo.png';
@@ -124,7 +127,8 @@ const useStyles = createUseStyles({
   findMatchBtn: {
     display: "flex",
     margin: "20px auto",
-    textTransform: "none"
+    textTransform: "none",
+    fontWeight: "bold"
   }, 
   chosenDifficulty: {
     backgroundColor: "#0275d8",
@@ -164,6 +168,12 @@ const useStyles = createUseStyles({
     width: "30%",
     bottom: "0",
     right: "2.5%",
+  },
+  logoutDialogOptions: {
+    textTransform: "none",
+    fontWeight: "bold",
+    margin: "5px",
+    height: "30px"
   }
 })
 
@@ -183,7 +193,7 @@ const HomePage = () => {
   const [historyByDate, setHistoryByDate] = useState({});
   const [historyByDifficulty, setHistoryByDifficulty] = useState({});
   const [quote, setQuote] = useState('');
-  const [cleared, setCleared] = useState({easy: 0, medium: 0, hard: 0})
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [sortHistoryBy, setSortHistoryBy] = useState("date");
 
   // Fetch quote for header card
@@ -208,7 +218,8 @@ const HomePage = () => {
         setHistoryByDate(dataHistoryByDate)
         setHistory(dataHistoryByDate);
 
-        const dataHistoryByDifficulty = [...data.history].sort((a, b) => difficultyMap[a.difficulty] - difficultyMap[b.difficulty]);
+        const dataHistoryByDifficulty = [...data.history]
+          .sort((a, b) => difficultyMap[a.difficulty] - difficultyMap[b.difficulty]);
         setHistoryByDifficulty(dataHistoryByDifficulty);
       })
   }, []);
@@ -238,6 +249,10 @@ const HomePage = () => {
       throw new Error("Unknown sort parameter.")
     }
   }
+
+  const openDialog = () => setIsDialogOpen(true);
+
+  const closeDialog = () => setIsDialogOpen(false);
 
   const handleCreateMatch = () => {
     return navigate('/matching', {state: {username: user, difficulty: selectedDifficulty}})
@@ -308,7 +323,7 @@ const HomePage = () => {
         <Button
           variant="contained"
           color="error"
-          onClick={handleLogout}
+          onClick={openDialog}
           sx={{ fontWeight: "bold", height: 40 }}
           className={classes.logoutButton}
         >
@@ -334,6 +349,26 @@ const HomePage = () => {
             </div>
           </Grid>
         </Grid>
+        
+        <Dialog open={isDialogOpen} onClose={closeDialog} className={classes.logoutDialog}>
+            <DialogContent>
+              <DialogContentText sx={{ textAlign: "center", fontWeight: "bold" }}>
+                You are about to log out. Continue?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeDialog} className={classes.logoutDialogOptions}>
+                <p>
+                  Return
+                </p>
+              </Button>
+              <Button onClick={handleLogout} className={classes.logoutDialogOptions}>
+                <p style={{ fontWeight: "bold", color: "red"}}>
+                  Confirm
+                </p>
+              </Button>
+            </DialogActions>
+          </Dialog>
       </div>
       <div className={classes.homePageImage}>
         <img src={homePageImage} alt="homepage-image"></img>

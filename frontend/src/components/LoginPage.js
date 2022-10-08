@@ -50,7 +50,8 @@ const useStyles = createUseStyles({
   loginContainerButton: {
     height: "45px",
     margin: "10px 0px",
-    textTransform: "none"
+    textTransform: "none",
+    fontWeight: "bold"
   }
 })
 

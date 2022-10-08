@@ -261,14 +261,14 @@ const SessionPage = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={returnToHome} className={classes.exitDialogOptions}>
-            <p style={{ fontWeight: "bold", color: "red"}}>
-              Confirm
-            </p>
-          </Button>
           <Button onClick={closeExitDialog} className={classes.exitDialogOptions}>
             <p>
               Return
+            </p>
+          </Button>
+          <Button onClick={returnToHome} className={classes.exitDialogOptions}>
+            <p style={{ fontWeight: "bold", color: "red"}}>
+              Confirm
             </p>
           </Button>
         </DialogActions>
