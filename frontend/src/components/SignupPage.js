@@ -50,7 +50,8 @@ const useStyles = createUseStyles({
   signupButton: {
     height: "45px",
     margin: "10px 0px",
-    textTransform: "Capitalize"
+    textTransform: "Capitalize",
+    fontWeight: "bold"
   },
   passwordMismatch: {
     margin: "5px 0",
