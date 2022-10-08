@@ -2,7 +2,6 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
 import index from "../index.js";
-import userServiceIndex from "../../user-service/index.js";
 import jwt from 'jsonwebtoken'
 const expect = chai.expect;
 let should = chai.should();
