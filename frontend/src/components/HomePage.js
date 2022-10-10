@@ -1,32 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
   Grid
 } from "@mui/material";
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.png';
+import homePageImage from '../assets/homePageImage.svg'
 import difficulties from '../utils/difficulties';
 
 const useStyles = createUseStyles({
   homePage: {
-    height: "100vh"
-  },
-  background: {
-    position: "absolute"
-  },
-  greyTriangle: {
-    width: "100%",
-    height: "100%",
-    background: "conic-gradient(at 50% 50%,transparent 135deg,green 0,green 225deg, transparent 0)"
+    height: "100vh",
+    backgroundColor: "#b5dce9",
   },
   banner: {
-    margin: "auto",
+    marginBottom: "20px",
     width: "100%",
     height:"fit-content",
-    backgroundColor: "transparent",
+    backgroundColor: "white",
     justifyContent: "space-between",
     display: "flex",
+    boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
   },
   logo: {
     margin: "20px 0 20px 20px",
@@ -45,58 +44,144 @@ const useStyles = createUseStyles({
   welcomePrompt: {
     margin: "0 20px 20px 20px",
     display: "block",
-    padding: "15px 20px 35px 20px",
+    padding: "15px 20px 20px 20px",
     borderRadius: "20px",
-    boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px"
+    backgroundColor: "white",
+    boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px",
+    lineHeight: "0.8"
   },
   mainContent: {
+    display: "flex",
     width: "100%",
     padding: "0 20px",
-    backgroundColor: "pink",
-    margin: "auto",
+    zIndex: "1"
   },
-  summaryStatistics: {
-    justifyContent:"center",
-    backgroundColor:"pink",
-    textAlign:"center"
+  featureCardContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignContent: "center",
   },
-  matchFind: {
-
+  featureCard: {
+    display: "flex",
+    flexDirection: "column",
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+    backgroundColor: "white",
+    width: "80%",
+    height: "350px",
+    padding: "15px 15px",
+    borderRadius: "10px",
+    maxWidth:"100%",
+    maxHeight: "100%",
+  },
+  featureCardPrompt: {
+    display: "flex",
+    justifyContent: "center",
+    lineHeight: "1",
+    margin: "0 0 0 10px"
+  },
+  sortByDiv: {
+    display: "flex",
+    justifyContent: "center",
+    fontSize: "14px",
+    color: "#cccccc"
+  },
+  sortByButton: {
+    background: "transparent",
+    border: "none",
+    fontSize: "14px",
+    color: "#cccccc"
+  },
+  sortBySelected: {
+    color: "#767676",
+    fontWeight: "bold",
+    textDecoration: "underline"
   },
   difficultyButton: {
     margin: "0px 10px"
   },
-  selectionPrompt: {
-    display: "flex",
-    justifyContent: "center",
-  },
   selectionBoxesContainer: {
+    display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     borderRadius: "10px",
-    width: "fit-content",
+    width: "100%",
     margin: "auto",
   },
   selectionBox: {
-    borderBottom: "1px solid black",
+    border: "1px solid #0275d8",
+    borderRadius: "10px",
+    margin: "15px auto",
     display: "flex",
-    height: "80px",
-    width: "500px",
+    height: "30px",
+    width: "60%",
     alignItems: "center",
     padding: "10px 20px",
-    fontSize: "24px",
+    fontSize: "20px",
     fontWeight: "bold",
+    color: "#0275d8",
     "&:hover": {
-      backgroundColor: "#cccccc",
+      backgroundColor: "#0275d8",
+      color: "white"
     }
   },
   findMatchBtn: {
     display: "flex",
     margin: "20px auto",
+    textTransform: "none",
+    fontWeight: "bold"
   }, 
   chosenDifficulty: {
-    backgroundColor: "#cccccc"
+    backgroundColor: "#0275d8",
+    color: "white"
+  },
+  recentAttemptsContent: {
+    margin: "0 10px",
+    overflow: "scroll"
+  },
+  recentAttemptEntry: {
+    display: "flex",
+    alignContent: "bottom"
+  },
+  easy: {
+    color: "#95b634",
+    fontSize: "16px",
+    fontWeight: "bold"
+  },
+  medium: {
+    color: "#fda172",
+    fontSize: "16px",
+    fontWeight: "bold"
+  },
+  hard: {
+    color: "#ed2939",
+    fontSize: "16px",
+    fontWeight: "bold"
+  },
+  attemptDate: {
+    marginLeft: "10px",
+    color: "#cccccc",
+    fontSize: "16px",
+    fontStyle: "italic",
+  },
+  homePageImage: {
+    position: "absolute",
+    width: "30%",
+    bottom: "0",
+    right: "2.5%",
+  },
+  logoutDialogOptions: {
+    textTransform: "none",
+    fontWeight: "bold",
+    margin: "5px",
+    height: "30px"
   }
 })
+
+const difficultyMap = {
+  easy: 1,
+  medium: 2,
+  hard: 3
+}
 
 const HomePage = () => {
   const classes = useStyles();
@@ -104,6 +189,40 @@ const HomePage = () => {
 
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   const [user, setUser] = useState(localStorage.getItem('username') || 'User');
+  const [history, setHistory] = useState({})
+  const [historyByDate, setHistoryByDate] = useState({});
+  const [historyByDifficulty, setHistoryByDifficulty] = useState({});
+  const [quote, setQuote] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [sortHistoryBy, setSortHistoryBy] = useState("date");
+
+  // Fetch quote for header card
+  useEffect(() => {
+    fetch("https://type.fit/api/quotes")
+      .then((res) => res.json())
+      .then((data) => setQuote(data[Math.floor(Math.random() * data.length)]))
+  }, [])
+
+  useEffect(() => {
+    const reqConfig = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({user: `${user}`})
+    }
+    fetch(`http://localhost:8003/api/history?${document.cookie}`, reqConfig)
+      .then((res) => res.json())
+      .then((data) => {
+        const dataHistoryByDate = [...data.history].reverse();
+        setHistoryByDate(dataHistoryByDate)
+        setHistory(dataHistoryByDate);
+
+        const dataHistoryByDifficulty = [...data.history]
+          .sort((a, b) => difficultyMap[a.difficulty] - difficultyMap[b.difficulty]);
+        setHistoryByDifficulty(dataHistoryByDifficulty);
+      })
+  }, []);
 
   const handleLogout = () => {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;" // Force token to expire.
@@ -115,6 +234,25 @@ const HomePage = () => {
   const handleDifficultySelection = (difficulty) => {
     setSelectedDifficulty(difficulty);
   }
+
+  const handleSortByChange = (sortBySelected) => {
+    setSortHistoryBy(sortBySelected);
+    if (sortBySelected === 'date') {
+      console.log("date");
+      console.log(historyByDate);
+      setHistory(historyByDate);
+    } else if (sortBySelected === 'difficulty') {
+      console.log("diffculty");
+      console.log(historyByDifficulty);
+      setHistory(historyByDifficulty);
+    } else {
+      throw new Error("Unknown sort parameter.")
+    }
+  }
+
+  const openDialog = () => setIsDialogOpen(true);
+
+  const closeDialog = () => setIsDialogOpen(false);
 
   const handleCreateMatch = () => {
     return navigate('/matching', {state: {username: user, difficulty: selectedDifficulty}})
@@ -132,8 +270,8 @@ const HomePage = () => {
 
   const renderMatchFindComponent = () => {
     return (
-      <div>
-        <h3 className={classes.selectionPrompt}>Select your desired difficulty level below:</h3>
+      <div className={classes.featureCard}>
+        <h2 className={classes.featureCardPrompt}>Up for another round?</h2>
         <div className={classes.selectionBoxesContainer}>
           {Object.keys(difficulties).map((difficulty) => <SelectionBox key={difficulty} difficulty={difficulty} />)}
         </div>
@@ -142,19 +280,51 @@ const HomePage = () => {
     )
   }
 
+  const renderLearningHistoryComponent = () => {
+    return (
+      <div className={classes.featureCard}>
+        <h2 className={classes.featureCardPrompt}>Most Recent Attempts</h2>
+        <div className={classes.sortByDiv}>
+          <p>Sort By:
+            <button 
+              className={`${classes.sortByButton} ${sortHistoryBy === 'date' ? classes.sortBySelected : ''}`}
+              onClick={() => handleSortByChange('date')}
+              value="date"
+            >Date (Most Recent)</button>
+            |
+            <button 
+              className={`${classes.sortByButton} ${sortHistoryBy === 'difficulty' ? classes.sortBySelected : ''}`}
+              onClick={() => handleSortByChange('difficulty')}
+            >Difficulty</button></p>
+        </div>
+        { history.length === 0 && <p className={classes.noAttemptsPrompt}>No recent attempts found.</p>}
+        { history.length > 0 && 
+          <div className={classes.recentAttemptsContent}>
+            { history.map((prev) => {
+              return (
+                <div className={classes.recentAttemptEntry}>
+                  <p className={`${classes.recentAttemptTitle} ${classes[prev.difficulty]}`}>
+                    {prev.question}
+                  </p>
+                  <p className={classes.attemptDate}>{`${new Date(prev.attemptedAt).toLocaleDateString()}`}</p>
+                </div>
+              )
+            })}
+          </div>
+        }
+      </div>
+    )
+  }
+
   return (
     <div className={classes.homePage}>
-      <div className={classes.background}>
-        <div className={classes.greyTriangle}></div>
-      </div>
-      
       <div className={classes.banner}>
         <img src={logo} className={classes.logo}></img>
         <Button
           variant="contained"
           color="error"
-          onClick={handleLogout}
-          sx={{ fontWeight: "bold", height: 35 }}
+          onClick={openDialog}
+          sx={{ fontWeight: "bold", height: 40 }}
           className={classes.logoutButton}
         >
           Logout
@@ -163,27 +333,45 @@ const HomePage = () => {
       
       <div className={classes.pageBody}>
         <div className={classes.welcomePrompt}>
-          <h1>Welcome back {user}!</h1>
-          <p><i>Inspiring Quote here. Fetch from some API.</i></p>
+          <h1>Welcome back {user}! 👋</h1>
+          <p><i>{quote.text} - {quote.author ? quote.author : "Unknown"}</i></p>
         </div>
 
         <Grid container className={classes.mainContent}>
-          <Grid item spacing={3} xs={4} sx={{border: "1px solid black"}}>
-            <div className={`${classes.featureCard} ${classes.summaryStatistics}`}>
-              Summary Statistics Component
+        <Grid item xs={4}>
+            <div className={`${classes.featureCardContainer}`}>
+              {renderLearningHistoryComponent()}
             </div>
           </Grid>
-          <Grid item spacing={3} xs={4} sx={{border: "1px solid red"}}>
-            <div className={`${classes.featureCard} ${classes.matchFind}`}>
+          <Grid item xs={4}>
+            <div className={`${classes.featureCardContainer}`}>
               {renderMatchFindComponent()}
             </div>
           </Grid>
-          <Grid item spacing={3} xs={4} sx={{border: "1px solid red"}}>
-            <div className={`${classes.featureCard} ${classes.historyService}`}>
-              Learning History Service
-            </div>
-          </Grid>
         </Grid>
+        
+        <Dialog open={isDialogOpen} onClose={closeDialog} className={classes.logoutDialog}>
+            <DialogContent>
+              <DialogContentText sx={{ textAlign: "center", fontWeight: "bold" }}>
+                You are about to log out. Continue?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeDialog} className={classes.logoutDialogOptions}>
+                <p>
+                  Return
+                </p>
+              </Button>
+              <Button onClick={handleLogout} className={classes.logoutDialogOptions}>
+                <p style={{ fontWeight: "bold", color: "red"}}>
+                  Confirm
+                </p>
+              </Button>
+            </DialogActions>
+          </Dialog>
+      </div>
+      <div className={classes.homePageImage}>
+        <img src={homePageImage} alt="homepage-image"></img>
       </div>
     </div>
   )

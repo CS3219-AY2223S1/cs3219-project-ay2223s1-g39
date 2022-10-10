@@ -6,7 +6,7 @@ import { Button, Dialog,
   DialogContentText } from "@mui/material";
 import {HashLoader} from "react-spinners";
 import { io } from 'socket.io-client';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const socket = io.connect("http://localhost:8001");
 const loadingMessages = [
@@ -50,10 +50,6 @@ const useStyles = createUseStyles({
     display: "block",
     color: "white",
     fontSize: "30px",
-  },
-  exitDialogContainer: {
-    borderRadius: "10px",
-    boxShadow: "box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px"
   }, 
   exitDialogOptions: {
     textTransform: "none",
@@ -134,14 +130,14 @@ const MatchingPage = () => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={cancelMatching} className={classes.exitDialogOptions}>
-                <p style={{ fontWeight: "bold", color: "red"}}>
-                  Confirm
-                </p>
-              </Button>
               <Button onClick={closeDialog} className={classes.exitDialogOptions}>
                 <p>
                   Return
+                </p>
+              </Button>
+              <Button onClick={cancelMatching} className={classes.exitDialogOptions}>
+                <p style={{ fontWeight: "bold", color: "red"}}>
+                  Confirm
                 </p>
               </Button>
             </DialogActions>
