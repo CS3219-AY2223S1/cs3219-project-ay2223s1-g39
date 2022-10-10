@@ -1,6 +1,7 @@
 import { ormGetHistory as _getHistory } from '../model/history-orm.js';
 
 export async function getHistory(req, res) {
+    console.log(req.body);
     try {
         const { user } = req.body
         if (!user) {
