@@ -143,6 +143,14 @@ io.on('connection', (socket) => {
     const { difficulty } = data;
     resetWaitingRoom(waitingRooms[difficulty]);
   })
+
+  socket.on("changeLanguage", async (data) => {
+    const { roomId, lang } = data;
+    socket.to(roomId).emit('handleLangChange', { 
+      language : lang 
+    });
+  })
+
 })
 
 server.listen(8001, () => console.log('match-service listening on port 8001'));
