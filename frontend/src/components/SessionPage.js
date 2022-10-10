@@ -145,6 +145,10 @@ const SessionPage = () => {
   }, [query]);
 
   const handleLanguageChange = (e) => {
+    socket.emit('changeLanguage', { 
+      roomId: roomId,
+      lang: e.target.value
+    });
     setLanguage(e.target.value);
     setCode(starterCode[e.target.value]);
   }
@@ -169,6 +173,10 @@ const SessionPage = () => {
   socket.emit('joinRoom', {roomId: roomId});
 
   socket.on(`alertLeaveRoom`, () => setIsAlertDialogOpen(true));
+
+  socket.on('handleLangChange', async (data) => {
+    setLanguage(data.language);
+  })
 
   return (
     <div className={classes.mainContent}>
