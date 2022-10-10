@@ -1,0 +1,44 @@
+name: ci
+on: [push]
+
+jobs:
+  test-user-service:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: user-service
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Download dependencies   
+        run: |
+          npm ci
+          npm update
+      - name: Run user service test cases    
+        run: npm test
+
+  test-question-service:  
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: question-service
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Download dependencies   
+        run: |
+          npm ci
+          npm update
+      - name: Run question service test cases    
+        run: npm test
+          
