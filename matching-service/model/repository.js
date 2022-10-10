@@ -28,17 +28,9 @@ export async function createMatch(params) {
   return newModel;
 }
 
-export async function updateMatch(model_id, params) {
-  let updatedModel = await matchModel.findOneAndUpdate(model_id, {
-    ...params
-  })
-
-  return updatedModel;
-}
-
 
 export async function deleteMatch(params) {
   const roomid = params.roomid
-  const updatedUser = await matchModel.findOneAndDelete({_id: roomid})
-  return updatedUser
+  const removedModel = await matchModel.findOneAndDelete({_id: roomid})
+  return removedModel
 }

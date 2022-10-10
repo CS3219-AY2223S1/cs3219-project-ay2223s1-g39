@@ -4,7 +4,8 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import axios from 'axios';
-import { ormCreateMatch as createMatch, ormDeleteMatch as deleteMatch, ormUpdateMatch as updateMatch} from './service/match-orm.js'
+import {createMatch, deleteMatch } from './controller/match-controller.js';
+import { ormCreateMatch } from './service/match-orm.js';
 
 const app = express();
 const server = createServer(app);
@@ -26,7 +27,7 @@ const router = express.Router()
 // Controller will contain all the User-defined Routes
 router.get('/', (_, res) => res.send("Hello world from matching-service!"));
 router.post('/', (req, res) => createMatch(req, res));
-router.delete('/', (req, res) => createMatch(req, res));
+router.delete('/', (req, res) => deleteMatch(req, res));
 
 app.use('/api/match', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
@@ -103,7 +104,7 @@ io.on('connection', (socket) => {
       room.matchFailure = setTimeout(() => alertMatchFailure(waitingRooms, difficulty), 31000);
     
     } else {
-      const newMatch = await createMatch(room.waitingUser, username, difficulty, room.question);
+      const newMatch = await ormCreateMatch(room.waitingUser, username, difficulty, room.question);
       socket.emit('matchSuccess', {
         message: "Match Found!", 
         roomId: newMatch._id, 
