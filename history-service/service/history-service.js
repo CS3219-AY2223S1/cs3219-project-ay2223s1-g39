@@ -3,6 +3,9 @@ import questionModel from '../model/question-model.js';
 
 export async function getHistory(params) {
     const user = params.user;
+    if (!user) {
+        throw 'invalid user id!';
+    }
     let matches = await matchModel.find({
         $or: [
             { userOne: user } ,
