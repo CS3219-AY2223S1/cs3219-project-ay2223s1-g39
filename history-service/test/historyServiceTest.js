@@ -1,3 +1,5 @@
+process.env.TOKEN_KEY = 'test'
+
 // Import the dependencies for testing
 import chai from "chai";
 import chaiHttp from "chai-http";
