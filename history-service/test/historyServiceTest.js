@@ -14,7 +14,7 @@ chai.should();
 
 describe("Test History Service", function () {
 
-  const validToken = jwt.sign({ user_id: "123" }, process.env.TOKEN_KEY, {
+  const validToken = jwt.sign({ user_id: "123" }, 'test', {
     expiresIn: "2h",
   });
 
