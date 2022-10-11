@@ -1,5 +1,3 @@
-process.env.TOKEN_KEY = 'test'
-
 // Import the dependencies for testing
 import chai from "chai";
 import chaiHttp from "chai-http";
@@ -14,7 +12,7 @@ chai.should();
 
 describe("Test History Service", function () {
 
-  const validToken = jwt.sign({ user_id: "123" }, 'test', {
+  const validToken = jwt.sign({ user_id: "123" }, process.env.TOKEN_KEY, {
     expiresIn: "2h",
   });
 

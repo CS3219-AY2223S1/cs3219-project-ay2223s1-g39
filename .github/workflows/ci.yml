@@ -66,6 +66,8 @@ jobs:
   test-history-service:  
 
     runs-on: ubuntu-latest
+    env:
+      TOKEN_KEY: test 
 
     defaults:
       run:
