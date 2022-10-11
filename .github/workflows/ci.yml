@@ -83,5 +83,5 @@ jobs:
       - name: Run history service test cases    
         run: npm test
         env:
-          TOKEN_KEY: ${{ secrets.MY_SECRET }}
+          TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
           
