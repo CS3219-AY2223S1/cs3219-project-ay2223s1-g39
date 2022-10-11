@@ -66,8 +66,6 @@ jobs:
   test-history-service:  
 
     runs-on: ubuntu-latest
-    env:
-      TOKEN_KEY: test 
 
     defaults:
       run:
@@ -84,4 +82,6 @@ jobs:
           npm update
       - name: Run history service test cases    
         run: npm test
+        env:
+          TOKEN_KEY: ${{ secrets.MY_SECRET }}
           
