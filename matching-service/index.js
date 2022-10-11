@@ -154,3 +154,5 @@ io.on('connection', (socket) => {
 })
 
 server.listen(8001, () => console.log('match-service listening on port 8001'));
+
+export default app;

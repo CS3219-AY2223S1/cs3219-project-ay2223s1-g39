@@ -42,3 +42,24 @@ jobs:
       - name: Run question service test cases    
         run: npm test
           
+
+  test-matching-service:  
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: matching-service
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Download dependencies   
+        run: |
+          npm ci
+          npm update
+      - name: Run matching service test cases    
+        run: npm test
+          
