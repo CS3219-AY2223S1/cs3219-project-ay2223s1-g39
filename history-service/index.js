@@ -13,7 +13,7 @@ app.options('*', cors())
 const router = express.Router()
 
 // APIs related to questions
-router.post('/', verifyToken, getHistory)
+router.get('/', verifyToken, getHistory)
 
 app.use('/api/history', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
