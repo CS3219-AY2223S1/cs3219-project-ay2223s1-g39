@@ -27,7 +27,7 @@ describe("Test History Service", function () {
     it("should get history", (done) => {
       chai
         .request(index)
-        .get(`/api/history/`)
+        .post(`/api/history/`)
         .send(testHistory)
         .end((err, res) => {
           expect(res).to.have.status(200);
