@@ -1,0 +1,102 @@
+name: ci
+on: [push]
+
+jobs:
+  test-user-service:
+
+    runs-on: ubuntu-latest
+    env:
+      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+      DB_LOCAL_URI: ${{ secrets.DB_LOCAL_URI }}
+      ENV: ${{ secrets.ENV }}
+
+    defaults:
+      run:
+        working-directory: user-service
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Download dependencies   
+        run: |
+          npm ci
+          npm update
+      - name: Run user service test cases    
+        run: npm test
+
+  test-question-service:  
+
+    runs-on: ubuntu-latest
+    env:
+      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+      DB_LOCAL_URI: ${{ secrets.DB_LOCAL_URI }}
+      ENV: ${{ secrets.ENV }}
+
+    defaults:
+      run:
+        working-directory: question-service
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Download dependencies   
+        run: |
+          npm ci
+          npm update
+      - name: Run question service test cases    
+        run: npm test
+          
+
+  test-matching-service:  
+
+    runs-on: ubuntu-latest
+    env:
+      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+      DB_LOCAL_URI: ${{ secrets.DB_LOCAL_URI }}
+      ENV: ${{ secrets.ENV }}
+      URL_QUESTION_SVC: ${{ secrets.URL_QUESTION_SVC }}
+
+    defaults:
+      run:
+        working-directory: matching-service
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Download dependencies   
+        run: |
+          npm ci
+          npm update
+      - name: Run matching service test cases    
+        run: npm test
+
+  test-history-service:  
+
+    runs-on: ubuntu-latest
+    env:
+      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+      DB_LOCAL_URI: ${{ secrets.DB_LOCAL_URI }}
+      ENV: ${{ secrets.ENV }}
+
+    defaults:
+      run:
+        working-directory: history-service
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Download dependencies   
+        run: |
+          npm ci
+          npm update
+      - name: Run history service test cases    
+        run: npm test
+          
