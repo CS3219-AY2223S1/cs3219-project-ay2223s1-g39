@@ -5,6 +5,10 @@ jobs:
   test-user-service:
 
     runs-on: ubuntu-latest
+    env:
+      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+      DB_LOCAL_URI: ${{ secrets.DB_LOCAL_URI }}
+      ENV: ${{ secrets.ENV }}
 
     defaults:
       run:
@@ -25,6 +29,10 @@ jobs:
   test-question-service:  
 
     runs-on: ubuntu-latest
+    env:
+      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+      DB_LOCAL_URI: ${{ secrets.DB_LOCAL_URI }}
+      ENV: ${{ secrets.ENV }}
 
     defaults:
       run:
@@ -46,6 +54,11 @@ jobs:
   test-matching-service:  
 
     runs-on: ubuntu-latest
+    env:
+      TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+      DB_LOCAL_URI: ${{ secrets.DB_LOCAL_URI }}
+      ENV: ${{ secrets.ENV }}
+      URL_QUESTION_SVC: ${{ secrets.URL_QUESTION_SVC }}
 
     defaults:
       run:
