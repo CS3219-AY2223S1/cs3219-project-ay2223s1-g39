@@ -4,6 +4,7 @@ import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage';
 import MatchingPage from './components/MatchingPage';
 import HomePage from './components/HomePage';
+import PasswordChangePage from './components/PasswordChangePage';
 import SessionPage from './components/SessionPage';
 import SyncProvider from "./SyncProvider"
 import {createUseStyles} from 'react-jss';
@@ -54,6 +55,11 @@ function App() {
                   <Route path="/home" element={
                       <RequireAuth>
                           <HomePage/>
+                      </RequireAuth>
+                  }/>
+                  <Route path='/passwordchange' element={
+                      <RequireAuth>
+                          <PasswordChangePage/>
                       </RequireAuth>
                   }/>
                   <Route path="/session" element={
