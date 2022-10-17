@@ -119,7 +119,6 @@ const PasswordChangePage = () => {
       newPassword: newConfirmPassword,
       token: document.cookie.split('=')[1]
     }
-    console.log(reqBody);
     const res = await axios.put(URL_USER_SVC + "/update-password", reqBody)
       .catch((err) => {
         if (err.response.status !== STATUS_CODE_OK) {
