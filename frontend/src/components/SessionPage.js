@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Button, Grid, Select, MenuItem } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Button, Grid, Select, MenuItem, Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 import starterCode from "../utils/startercode";
 import difficulties from "../utils/difficulties";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { useSyncState } from "../SyncProvider"
 import { createUseStyles } from 'react-jss';
+import { io } from 'socket.io-client';
 import logo from '../assets/logo.png'
 import "../index.css";
 
@@ -34,7 +38,6 @@ const useStyles = createUseStyles({
     margin: "20px 20px 20px 0",
   },
   questionSpace: {
-    fontFamily: "M PLUS Rounded 1c",
     display: "flex",
     flexDirection: "column",
     height: "80vh",
@@ -80,7 +83,7 @@ const useStyles = createUseStyles({
     width: "95%",
     backgroundColor: "#eeeeee",
     fontSize: "13px",
-    fontFamily: "source code pro",
+    fontFamily: "Roboto Mono",
     borderRadius: "10px",
     padding: "10px",
   },
@@ -109,15 +112,30 @@ const useStyles = createUseStyles({
   textArea: {
     overflowY: "scroll",
     borderRadius: "10px",
+  },
+  exitDialogContainer: {
+    borderRadius: "10px",
+    boxShadow: "box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px"
+  }, 
+  exitDialogOptions: {
+    textTransform: "none",
+    fontWeight: "bold",
+    margin: "5px",
+    height: "30px"
   }
 })
 
+const socket = io.connect("http://localhost:8001");
+
 const SessionPage = () => {
+  const navigate = useNavigate();
   const { state } = useLocation();
   const {roomId, partner, difficulty, question} = state;
   const [language, setLanguage] = useState("java");
   const [query, setQuery] = useState("");
   const [code, setCode] = useSyncState(`${roomId}`);
+  const [isExitDialogOpen, setIsExitDialogOpen] = useState(false);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const classes = useStyles();
 
   // this helps to reduce the number of times setState is called, reducing funkiness while typing 
@@ -127,9 +145,38 @@ const SessionPage = () => {
   }, [query]);
 
   const handleLanguageChange = (e) => {
+    socket.emit('changeLanguage', { 
+      roomId: roomId,
+      lang: e.target.value
+    });
     setLanguage(e.target.value);
     setCode(starterCode[e.target.value]);
   }
+
+  const openExitDialog = () => {
+    setIsExitDialogOpen(true);
+  }
+
+  const closeExitDialog = () => setIsExitDialogOpen(false);
+
+  const openAlertDialog = () => {
+    setIsAlertDialogOpen(true);
+  }
+
+  const closeAlertDialog = () => setIsAlertDialogOpen(false);
+
+  const returnToHome = () => {
+    socket.emit(`leaveRoom`, { roomId: roomId });
+    navigate('/home');
+  }
+
+  socket.emit('joinRoom', {roomId: roomId});
+
+  socket.on(`alertLeaveRoom`, () => setIsAlertDialogOpen(true));
+
+  socket.on('handleLangChange', async (data) => {
+    setLanguage(data.language);
+  })
 
   return (
     <div className={classes.mainContent}>
@@ -138,8 +185,7 @@ const SessionPage = () => {
         <Button
           variant="contained"
           color="error"
-          component={Link}
-          to="/home"
+          onClick={openExitDialog}
           sx={{ fontWeight: "bold", height: 40 }}
           className={classes.endSessionButton}
         >
@@ -216,6 +262,40 @@ const SessionPage = () => {
           </Grid>
         </Grid>
       </div>
+      <Dialog open={isExitDialogOpen} onClose={closeExitDialog} className={classes.exitDialog}>
+        <DialogContent>
+          <DialogContentText sx={{ textAlign: "center", fontWeight: "bold" }}>
+            You are about the leave to room. Continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeExitDialog} className={classes.exitDialogOptions}>
+            <p>
+              Return
+            </p>
+          </Button>
+          <Button onClick={returnToHome} className={classes.exitDialogOptions}>
+            <p style={{ fontWeight: "bold", color: "red"}}>
+              Confirm
+            </p>
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={isAlertDialogOpen} onClose={closeAlertDialog} className={classes.exitDialog}>
+        <DialogContent>
+          <DialogContentText sx={{ textAlign: "center", fontWeight: "bold" }}>
+            Oh no! It seems like your partner has left the room.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeAlertDialog} className={classes.exitDialogOptions}>
+            <p>
+              Got it
+            </p>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

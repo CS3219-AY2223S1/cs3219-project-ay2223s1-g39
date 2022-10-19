@@ -32,7 +32,8 @@
     "matching-service": "cd ../matching-service && npm install && npm run dev",
     "question-service": "cd ../question-service && npm install && npm run dev",
     "user-service": "cd ../user-service && npm install && npm run dev",
-    "dev": "concurrently \"npm install && npm start\" \"npm run twilio\" \"npm run matching-service\" \"npm run question-service\" \"npm run user-service\""
+    "history-service": "cd ../history-service && npm install && npm run dev",
+    "dev": "concurrently \"npm install && npm start\" \"npm run twilio\" \"npm run matching-service\" \"npm run question-service\" \"npm run user-service\" \"npm run history-service\""
   },
   "eslintConfig": {
     "extends": [

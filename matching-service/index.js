@@ -4,7 +4,8 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import axios from 'axios';
-import { ormCreateMatch as createMatch, ormDeleteMatch as deleteMatch, ormUpdateMatch as updateMatch} from './service/match-orm.js'
+import {createMatch, deleteMatch } from './controller/match-controller.js';
+import { ormCreateMatch } from './service/match-orm.js';
 
 const app = express();
 const server = createServer(app);
@@ -26,12 +27,14 @@ const router = express.Router()
 // Controller will contain all the User-defined Routes
 router.get('/', (_, res) => res.send("Hello world from matching-service!"));
 router.post('/', (req, res) => createMatch(req, res));
-router.delete('/', (req, res) => createMatch(req, res));
+router.delete('/', (req, res) => deleteMatch(req, res));
 
 app.use('/api/match', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
 })
+
+let gameRooms = {};
 
 let waitingRooms = {
   easy: {
@@ -71,7 +74,7 @@ async function generateQuestionforRoom(token, difficulty, room) {
 
   return axios.get(`${process.env.URL_QUESTION_SVC}/difficulty`, {params})
     .then((res) => res.data.question)
-    .then((questions) => questions[Math.floor(Math.random(questions.length))])
+    .then((questions) => questions[Math.floor(Math.random() * questions.length)])
     .then((question) => (room.question = question))
     .catch((err) => console.log(err));
 }
@@ -101,7 +104,7 @@ io.on('connection', (socket) => {
       room.matchFailure = setTimeout(() => alertMatchFailure(waitingRooms, difficulty), 31000);
     
     } else {
-      const newMatch = await createMatch(room.waitingUser, username, difficulty, room.question);
+      const newMatch = await ormCreateMatch(room.waitingUser, username, difficulty, room.question);
       socket.emit('matchSuccess', {
         message: "Match Found!", 
         roomId: newMatch._id, 
@@ -116,8 +119,23 @@ io.on('connection', (socket) => {
         difficulty: difficulty,
         question: room.question
       })
-      
       resetWaitingRoom(room);
+    }
+  })
+
+  socket.on('joinRoom', (data) => {
+    if (!gameRooms[data.roomId]) {
+      gameRooms[data.roomId] = 2;
+    }
+    socket.join(data.roomId);
+  })
+
+  socket.on("leaveRoom", async (data) => {
+    gameRooms[data.roomId] = gameRooms[data.roomId] - 1;
+    if (gameRooms[data.roomId] === 0) {
+      delete gameRooms[data.roomId];
+    } else {
+      socket.to(data.roomId).emit('alertLeaveRoom');
     }
   })
 
@@ -125,6 +143,16 @@ io.on('connection', (socket) => {
     const { difficulty } = data;
     resetWaitingRoom(waitingRooms[difficulty]);
   })
+
+  socket.on("changeLanguage", async (data) => {
+    const { roomId, lang } = data;
+    socket.to(roomId).emit('handleLangChange', { 
+      language : lang 
+    });
+  })
+
 })
 
 server.listen(8001, () => console.log('match-service listening on port 8001'));
+
+export default app;

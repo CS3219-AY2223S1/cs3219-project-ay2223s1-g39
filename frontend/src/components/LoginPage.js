@@ -50,7 +50,8 @@ const useStyles = createUseStyles({
   loginContainerButton: {
     height: "45px",
     margin: "10px 0px",
-    textTransform: "none"
+    textTransform: "none",
+    fontWeight: "bold"
   }
 })
 
@@ -83,7 +84,7 @@ const LoginPage = () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res.message === "success!") {
+        if (res.message === "Success!") {
           document.cookie = "token=" + res.user.token
           localStorage.setItem('username', res.user.username);
           localStorage.setItem('id', res.user._id);

@@ -13,9 +13,7 @@ app.options('*', cors())
 const router = express.Router()
 
 // APIs related to questions
-router.get('/', verifyToken, getHistory)
-// router.get('/', verifyToken, getQuestion)
-// router.get('/difficulty', verifyToken, getQuestionsByDifficulty)
+router.post('/', verifyToken, getHistory)
 
 app.use('/api/history', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
@@ -34,3 +32,5 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once("open", function () {
   console.log("Connected successfully");
 });
+
+export default app;

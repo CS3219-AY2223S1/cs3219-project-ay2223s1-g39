@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config'
 import mongoose from 'mongoose';
-import {createQuestion, getQuestion, getQuestionsByDifficulty } from './controller/question-controller.js';
+import {createQuestion, deleteQuestion, getQuestion, getQuestionsByDifficulty } from './controller/question-controller.js';
 import {verifyToken} from './middleware/auth.js';
 
 const app = express();
@@ -16,6 +16,7 @@ const router = express.Router()
 router.post('/create', verifyToken, createQuestion)
 router.get('/', verifyToken, getQuestion)
 router.get('/difficulty', verifyToken, getQuestionsByDifficulty)
+router.delete('/delete', verifyToken, deleteQuestion)
 
 app.use('/api/question', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
@@ -34,3 +35,5 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once("open", function () {
   console.log("Connected successfully");
 });
+
+export default app;
