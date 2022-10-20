@@ -27,13 +27,20 @@ const useStyles = createUseStyles({
     display: "flex",
     boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
   },
+  bannerRight: {
+    display: "flex",
+    alignItems: "center"
+  },
   logo: {
     margin: "20px 0 20px 20px",
     height: "35px",
     width: "auto",
   },
+  changePasswordButton: {
+    margin: "20px 20px 20px 0px",
+  },
   logoutButton: {
-    margin: "20px 20px 20px 0",
+    margin: "20px 20px 20px 0px",
   },
   pageBody: {
     display: "flex",
@@ -320,15 +327,26 @@ const HomePage = () => {
     <div className={classes.homePage}>
       <div className={classes.banner}>
         <img src={logo} className={classes.logo}></img>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={openDialog}
-          sx={{ fontWeight: "bold", height: 40 }}
-          className={classes.logoutButton}
-        >
-          Logout
-        </Button>
+        <div className={classes.bannerRight}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate('/passwordchange')}
+            sx={{ fontWeight: "bold", height: 40 }}
+            className={classes.changePasswordButton}
+          >
+            Change Password
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={openDialog}
+            sx={{ fontWeight: "bold", height: 40 }}
+            className={classes.logoutButton}
+          >
+            Logout
+          </Button>
+        </div>
       </div>
       
       <div className={classes.pageBody}>
