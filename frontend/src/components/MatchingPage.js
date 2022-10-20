@@ -7,8 +7,9 @@ import { Button, Dialog,
 import {HashLoader} from "react-spinners";
 import { io } from 'socket.io-client';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { URL_MATCHING_SVC } from "../configs";
 
-const socket = io.connect("http://localhost:8001");
+const socket = io.connect(URL_MATCHING_SVC);
 const loadingMessages = [
   "Following a trail to find your coding partner...",
   "Searching far and wide, to find the one that's right...",
