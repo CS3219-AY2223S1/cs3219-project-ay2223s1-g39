@@ -17,7 +17,7 @@ app.options('*', cors())
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Link for frontend client
+    origin: "https://main.d1p69j2mm8o9ao.amplifyapp.com", // Link for frontend client
     methods: ["GET", "POST", "DELETE"]
   }
 });

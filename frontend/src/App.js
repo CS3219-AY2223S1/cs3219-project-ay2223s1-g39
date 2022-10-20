@@ -8,6 +8,7 @@ import PasswordChangePage from './components/PasswordChangePage';
 import SessionPage from './components/SessionPage';
 import SyncProvider from "./SyncProvider"
 import {createUseStyles} from 'react-jss';
+import { URL_TWILIO_SVC } from "./configs";
 
 const useStyles = createUseStyles({
   app: {
@@ -19,7 +20,7 @@ function App() {
     const classes = useStyles();
     
     const getToken = async () => {
-      const response = await fetch('http://localhost:3001/tokens', {
+      const response = await fetch(`${URL_TWILIO_SVC}`, {
         method: 'POST',
       });
       const data = await response.json();

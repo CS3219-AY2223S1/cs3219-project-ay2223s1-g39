@@ -55,6 +55,7 @@
   },
   "devDependencies": {
     "concurrently": "^7.4.0",
+    "dotenv-webpack": "^8.0.1",
     "eslint": "^8.21.0",
     "eslint-plugin-react": "^7.30.1"
   }
