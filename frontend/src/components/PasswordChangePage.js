@@ -12,7 +12,6 @@ import {
   TextField
 } from "@mui/material";
 import logo from '../assets/logo.png';
-import homePageImage from '../assets/homePageImage.svg'
 import {URL_USER_SVC} from "../configs";
 import {STATUS_CODE_OK, STATUS_CODE_BAD_REQUEST} from "../constants";
 
@@ -59,18 +58,21 @@ const useStyles = createUseStyles({
   },
   backButton: {
     border: "none",
-    backgroundColor: "transparent",
+    padding: "10px",
+    borderRadius: "5px",
     fontSize: "16px",
     fontStyle: "italic",
-    color: "#898989",
+    fontWeight: "bold",
+    color: "black",
     cursor: "pointer",
-    marginBottom: "20px",
+    marginBottom: "20px"
   },
   changePasswordButton: {
     height: "45px",
     margin: "10px auto",
     textTransform: "Capitalize",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    float: "right"
   },
   passwordMismatch: {
     display: "block",
@@ -79,12 +81,6 @@ const useStyles = createUseStyles({
     fontStyle: "italic",
     color: "#898989"
   },
-  homePageImage: {
-    position: "absolute",
-    width: "30%",
-    bottom: "0",
-    right: "2.5%",
-  }
 })
 
 const PasswordChangePage = () => {
@@ -243,9 +239,6 @@ const PasswordChangePage = () => {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
-      <div className={classes.homePageImage}>
-        <img src={homePageImage} alt="homepage-image"></img>
       </div>
     </div>
   )
