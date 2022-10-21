@@ -24,6 +24,10 @@ app.use('/api/user', router).all((_, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
 })
 
+app.get('/',(_, res) => {
+  res.send('Hello World from user-service!')
+})
+
 app.listen(8000, () => console.log('user-service listening on port 8000'));
 
 //Set up mongoose connection

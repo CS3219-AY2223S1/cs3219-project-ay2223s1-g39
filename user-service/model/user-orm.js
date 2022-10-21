@@ -1,6 +1,5 @@
 import { createUser, loginUser, updatePassword, deleteUser } from '../service/user-service.js';
 
-//need to separate orm functions from repository to decouple business logic from persistence
 export async function ormCreateUser(username, password) {
     try {
         const newUser = await createUser({username: username, password: password});
