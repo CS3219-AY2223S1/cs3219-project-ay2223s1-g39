@@ -20,6 +20,10 @@ app.use('/api/history', router).all((_, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
 })
 
+app.get('/',(_, res) => {
+  res.send('Hello World from history-service!')
+})
+
 app.listen(8003, () => console.log('history-service listening on port 8003'));
 
 //Set up mongoose connection

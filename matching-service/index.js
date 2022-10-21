@@ -34,6 +34,10 @@ app.use('/api/match', router).all((_, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
 })
 
+app.get('/',(_, res) => {
+  res.send('Hello World from matching-service!')
+})
+
 let gameRooms = {};
 
 let waitingRooms = {
