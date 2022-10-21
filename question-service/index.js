@@ -23,6 +23,10 @@ app.use('/api/question', router).all((_, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
 })
 
+app.get('/',(_, res) => {
+  res.send('Hello World from question-service!')
+})
+
 app.listen(8002, () => console.log('question-service listening on port 8002'));
 
 //Set up mongoose connection
