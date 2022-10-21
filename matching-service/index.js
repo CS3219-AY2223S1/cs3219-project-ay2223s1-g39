@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { createServer } from 'http';
+import { createServer } from 'https';
 import { Server } from 'socket.io';
 import axios from 'axios';
 import {createMatch, deleteMatch } from './controller/match-controller.js';
@@ -17,7 +17,7 @@ app.options('*', cors())
 
 const io = new Server(server, {
   cors: {
-    origin: "https://try-deploy.d1p69j2mm8o9ao.amplifyapp.com", // Link for frontend client
+    origin: process.env.URL_FRONTEND, // Link for frontend client
     methods: ["GET", "POST", "DELETE"]
   }
 });
