@@ -17,7 +17,7 @@ app.options('*', cors())
 
 const io = new Server(server, {
   cors: {
-    origin: "https://try-deploy.d1p69j2mm8o9ao.amplifyapp.com", // Link for frontend client
+    origin: "https://www.cs3219-peerprep-g39.com/", // Link for frontend client
     methods: ["GET", "POST", "DELETE"]
   }
 });
