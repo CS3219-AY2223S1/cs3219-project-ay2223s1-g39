@@ -12,6 +12,7 @@
     "@uiw/react-textarea-code-editor": "^2.0.3",
     "axios": "^0.27.2",
     "cookie-parser": "^1.4.6",
+    "https": "^1.0.0",
     "react": "^18.2.0",
     "react-countdown-circle-timer": "^3.0.9",
     "react-dom": "^18.2.0",

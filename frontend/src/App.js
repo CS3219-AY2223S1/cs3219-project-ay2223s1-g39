@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+import https from 'https';
 import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage';
@@ -16,13 +18,17 @@ const useStyles = createUseStyles({
   }
 })
 
+const axiosInstance = axios.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+});
+
 function App() {
     const classes = useStyles();
     
     const getToken = async () => {
-      const response = await fetch(`${URL_TWILIO_SVC}`, {
-        method: 'POST',
-      });
+      const response = await axiosInstance.post(`${URL_TWILIO_SVC}`);
       const data = await response.json();
       return data.token;
     };
