@@ -4,8 +4,9 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import axios from 'axios';
+import https from 'https';
 import {createMatch, deleteMatch } from './controller/match-controller.js';
-import { ormCreateMatch } from './service/match-orm.js';
+import { ormCreateMatch } from './model/match-orm.js';
 
 const app = express();
 const server = createServer(app);
@@ -15,9 +16,15 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.options('*', cors())
 
+const axiosInstance = axios.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+});
+
 const io = new Server(server, {
   cors: {
-    origin: "https://www.cs3219-peerprep-g39.com/", // Link for frontend client
+    origin: "http://localhost:3000", // Link for frontend client
     methods: ["GET", "POST", "DELETE"]
   }
 });
@@ -76,7 +83,7 @@ async function generateQuestionforRoom(token, difficulty, room) {
     difficulty: difficulty
   }
 
-  return axios.get(`${process.env.URL_QUESTION_SVC}/difficulty`, {params})
+  return axiosInstance.get(`${process.env.URL_QUESTION_SVC}/difficulty`, {params})
     .then((res) => res.data.question)
     .then((questions) => questions[Math.floor(Math.random() * questions.length)])
     .then((question) => (room.question = question))
