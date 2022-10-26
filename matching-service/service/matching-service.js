@@ -1,4 +1,4 @@
-import matchModel from './match-model.js';
+import matchModel from '../model/match-model.js';
 import 'dotenv/config'
 import mongoose from 'mongoose';
 

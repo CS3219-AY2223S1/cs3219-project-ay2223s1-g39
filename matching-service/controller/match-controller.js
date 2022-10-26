@@ -1,4 +1,4 @@
-import { ormCreateMatch as _createMatch, ormDeleteMatch as _deleteMatch} from '../service/match-orm.js'
+import { ormCreateMatch as _createMatch, ormDeleteMatch as _deleteMatch} from '../model/match-orm.js'
 
 export async function createMatch(req, res) {
     try {

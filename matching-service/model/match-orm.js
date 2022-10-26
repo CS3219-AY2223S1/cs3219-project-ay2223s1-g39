@@ -1,4 +1,4 @@
-import { createMatch, deleteMatch } from '../model/repository.js';
+import { createMatch, deleteMatch } from '../service/matching-service.js';
 
 //need to separate orm functions from repository to decouple business logic from persistence
 export async function ormCreateMatch(userOne, userTwo, difficulty, question) {
