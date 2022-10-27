@@ -30,6 +30,7 @@ function App() {
     const getToken = async () => {
       const response = await axiosInstance.post(`${URL_TWILIO_SVC}`);
       const data = response.data;
+      console.log(data.token);
       return data.token;
     };
 
