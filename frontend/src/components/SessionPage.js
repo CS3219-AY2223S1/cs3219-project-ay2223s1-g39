@@ -141,7 +141,7 @@ const SessionPage = () => {
 
   // this helps to reduce the number of times setState is called, reducing funkiness while typing 
   useEffect(() => {
-    const timeOutId = setTimeout(() => setCode(query), 600);
+    const timeOutId = setTimeout(() => setCode(query), 100);
     return () => clearTimeout(timeOutId);
   }, [query]);
 
