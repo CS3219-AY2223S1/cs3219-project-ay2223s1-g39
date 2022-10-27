@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import https from 'https';
 import {
   Alert,
   Button,
@@ -83,6 +84,13 @@ const useStyles = createUseStyles({
   },
 })
 
+// To bypass self-signed cert error due to no domain.
+const axiosInstance = axios.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+});
+
 const PasswordChangePage = () => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -122,7 +130,7 @@ const PasswordChangePage = () => {
       newPassword: newConfirmPassword,
       token: document.cookie.split('=')[1]
     }
-    const res = await axios.put(URL_USER_SVC + "/update-password", reqBody)
+    const res = await axiosInstance.put(URL_USER_SVC + "/update-password", reqBody)
       .catch((err) => {
         if (err.response.status !== STATUS_CODE_OK) {
           console.log(err);
