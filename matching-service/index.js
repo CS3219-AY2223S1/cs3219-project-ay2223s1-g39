@@ -24,7 +24,7 @@ const axiosInstance = axios.create({
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Link for frontend client
+    origin: `${process.env.URL_FRONTEND}`, // Link for frontend client
     methods: ["GET", "POST", "DELETE"]
   }
 });
@@ -39,6 +39,9 @@ router.delete('/', (req, res) => deleteMatch(req, res));
 app.use('/api/match', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', '*')
+    res.setHeader('Access-Control-Allow-Headers', '*')
+    res.setHeader('Access-Control-Expose-Headers', '*')
 })
 
 app.get('/',(_, res) => {
