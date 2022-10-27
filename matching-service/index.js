@@ -6,7 +6,7 @@ import { Server } from 'socket.io';
 import axios from 'axios';
 import https from 'https';
 import {createMatch, deleteMatch } from './controller/match-controller.js';
-import { ormCreateMatch } from './model/match-orm.js';
+import { ormCreateMatch } from './service/match-orm.js';
 
 const app = express();
 const server = createServer(app);
