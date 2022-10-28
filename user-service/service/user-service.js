@@ -56,14 +56,27 @@ export async function loginUser(params) {
     throw "No such user found!"
   }
   const isCorrectPw = await bcrypt.compare(password, user.password)
+  let token;
   if (isCorrectPw) {
-    const token = jwt.sign(
-      { user_id: user._id },
+    console.log(user.role)
+    if (user.role && user.role.includes('admin')) {
+      token = jwt.sign(
+      { user_id: user._id, 
+      role: 'admin' },
       process.env.TOKEN_KEY,
       {
         expiresIn: "2h",
       }
     );
+    } else {
+      token = jwt.sign(
+        { user_id: user._id },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: "2h",
+        }
+      );
+    }
     console.log(token)
     user = user.toObject()
     user['token'] = token

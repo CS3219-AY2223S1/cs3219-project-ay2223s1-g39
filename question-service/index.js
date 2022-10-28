@@ -3,7 +3,7 @@ import cors from 'cors';
 import 'dotenv/config'
 import mongoose from 'mongoose';
 import {createQuestion, deleteQuestion, getQuestion, getQuestionsByDifficulty } from './controller/question-controller.js';
-import {verifyToken} from './middleware/auth.js';
+import {verifyToken, permit} from './middleware/auth.js';
 
 const app = express();
 app.use(express.urlencoded({ extended: true }))
@@ -13,10 +13,10 @@ app.options('*', cors())
 const router = express.Router()
 
 // APIs related to questions
-router.post('/create', verifyToken, createQuestion)
+router.post('/create', verifyToken, permit('admin'), createQuestion)
 router.get('/', verifyToken, getQuestion)
 router.get('/difficulty', verifyToken, getQuestionsByDifficulty)
-router.delete('/delete', verifyToken, deleteQuestion)
+router.delete('/delete', verifyToken, permit('admin'), deleteQuestion)
 
 app.use('/api/question', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')

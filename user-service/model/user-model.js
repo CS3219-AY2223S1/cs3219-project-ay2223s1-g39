@@ -16,6 +16,10 @@ let UserModelSchema = new Schema({
         required: true,
         default: Date.now
     },
+    role: {
+        type: Array,
+
+    }
 })
 
 export default mongoose.model('UserModel', UserModelSchema)

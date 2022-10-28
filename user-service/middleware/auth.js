@@ -11,8 +11,12 @@ export const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, config.TOKEN_KEY);
     req.user = decoded.user_id;
+    if (permittedRoles.includes(decoded.role)) {
+        return next()
+    } else {
+        return res.status(403).send("User not authorized.")
+    }
   } catch (err) {
     return res.status(401).send({message: "Invalid Token"});
   }
-  return next();
 };
