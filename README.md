@@ -8,9 +8,9 @@ As the deployed microservices are not registered with a Public Certificate Autho
 - Twilio Service: `To be updated with deployed Twilio-Service URL`
 2. Your browser should display a warning about the site, as shown in the image below.
 ![Browser Warning](readme_images/invalid_cert.png)
-3. Click on show advance, and select the option to proceed to the url. This would cause the browser to accept the self-signed certificate.
+3. Click on `Show advanced`, and select the option to proceed to the url. This would cause the browser to accept the self-signed certificate.
 4. Repeat steps (2) and (3) for the remaining microservices.
-5. Once done, access the deployed application at `https://www.cs3219-peerprep-g39.com/login`. The application should work as normal.
+5. Once done, access the deployed application at `https://www.cs3219-peerprep-g39.com`. The application should work as normal.
 
 ## Running the project locally
 1. Clone the repository to your local device. Please ensure that the `.env` files are cloned.
