@@ -8,6 +8,7 @@ on:
     
 jobs:
   deploy-history-service:
+    name: Deploy History Service
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -31,6 +32,7 @@ jobs:
         deployment_package: history-service/history-service.zip
 
   deploy-matching-service:
+    name: Deploy Matching Service
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -55,6 +57,7 @@ jobs:
 
 
   deploy-question-service:
+    name: Deploy Question Service
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -78,6 +81,7 @@ jobs:
         deployment_package: question-service/question-service.zip
 
   deploy-user-service:
+    name: Deploy User Service
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -101,6 +105,7 @@ jobs:
         deployment_package: user-service/user-service.zip
 
   deploy-twilio-service:
+    name: Deploy Twilio Service
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
