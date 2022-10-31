@@ -2,7 +2,7 @@ name: Deploy to EB
 
 on:
   workflow_run:
-    workflows: [ CI ]
+    workflows: [ ci ]
     branches: [ main ]
     types: 
       - completed
