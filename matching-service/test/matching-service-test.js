@@ -9,11 +9,11 @@ let should = chai.should();
 chai.use(chaiHttp);
 chai.should();
 
-describe("Test Question Service", function () {
+describe("Test Matching Service", function () {
   let testMatch = {
     userOne: "testMatchingServiceUser1",
     userTwo: "testMatchingServiceUser2",
-    difficulty: "Medium",
+    difficulty: "medium",
     question: "Test Sum",
   };
 
@@ -32,10 +32,123 @@ describe("Test Question Service", function () {
           );
           done();
         });
-    });
+    }),
+      it("should return error 400 for missing userOne", (done) => {
+        chai
+          .request(index)
+          .post("/api/match/")
+          .send({
+            userOne: " ",
+            userTwo: `${testMatch.userTwo}`,
+            difficulty: `${testMatch.difficulty}`,
+            question: `${testMatch.question}`,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(`Invalid username for User One!`);
+            done();
+          });
+      }),
+      it("should return error 400 for missing userTwo", (done) => {
+        chai
+          .request(index)
+          .post("/api/match/")
+          .send({
+            userOne: `${testMatch.userOne}`,
+            userTwo: " ",
+            difficulty: `${testMatch.difficulty}`,
+            question: `${testMatch.question}`,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(`Invalid username for User Two!`);
+            done();
+          });
+      }),
+      it("should return error 400 for missing question", (done) => {
+        chai
+          .request(index)
+          .post("/api/match/")
+          .send({
+            userOne: `${testMatch.userOne}`,
+            userTwo: `${testMatch.userTwo}`,
+            difficulty: `${testMatch.difficulty}`,
+            question: " ",
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(`Invalid question returned!`);
+            done();
+          });
+      }),
+      it("should return error 400 for missing difficulty", (done) => {
+        chai
+          .request(index)
+          .post("/api/match/")
+          .send({
+            userOne: `${testMatch.userOne}`,
+            userTwo: `${testMatch.userTwo}`,
+            difficulty: " ",
+            question: `${testMatch.question}`,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(`Invalid difficulty returned!`);
+            done();
+          });
+      }),
+      it("should return error 400 for incorrect difficulty", (done) => {
+        chai
+          .request(index)
+          .post("/api/match/")
+          .send({
+            userOne: `${testMatch.userOne}`,
+            userTwo: `${testMatch.userTwo}`,
+            difficulty: "ReallyEasy",
+            question: `${testMatch.question}`,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal(`Unknown difficulty level returned!`);
+            done();
+          });
+      });
   }),
     describe("Test deleteMatch function /api/match/", function () {
       it("should create delete match", (done) => {
+        it("should return error 400 for empty roomid", (done) => {
+          chai
+            .request(index)
+            .post("/api/match/")
+            .send({
+              roomid: " "
+            })
+            .end((err, res) => {
+              expect(res).to.have.status(400);
+              expect(res.body).to.be.a("object");
+              expect(res.body.message).to.equal(`Invalid room found!`);
+              done();
+            });
+        }),
+        it("should return error 400 for invalid roomid", (done) => {
+          chai
+            .request(index)
+            .post("/api/match/")
+            .send({
+              roomid: "abcde"
+            })
+            .end((err, res) => {
+              expect(res).to.have.status(400);
+              expect(res.body).to.be.a("object");
+              expect(res.body.message).to.equal(`No such room found!`);
+              done();
+            });
+        }),
         chai
           .request(index)
           .delete("/api/match/")
@@ -43,9 +156,7 @@ describe("Test Question Service", function () {
           .end((err, res) => {
             expect(res).to.have.status(200);
             expect(res.body).to.be.a("object");
-            expect(res.body.message).to.equal(
-              "Match deleted successfully!"
-            );
+            expect(res.body.message).to.equal("Match deleted successfully!");
             done();
           });
       });
