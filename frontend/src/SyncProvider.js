@@ -61,7 +61,9 @@ export function useSyncState(name, initialValue) {
 
   const setData = useCallback(value => {
     (async () => {
-      if (typeof value === 'function') {
+      if (!value) {
+        return;
+      } else if (typeof value === 'function') {
         await doc.set({state: value(data)});
       }
       else {
