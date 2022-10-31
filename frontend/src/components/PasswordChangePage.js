@@ -120,7 +120,8 @@ const PasswordChangePage = () => {
   const handlePasswordChange = async () => {
     setErrorMessage('');
     setSuccessfulReset(false);
-
+    closePasswordChangeDialog();
+    
     if (newPassword.length < 5) return setErrorMessage("Your password must be at least 5 characters long.")
     if (!passwordsMatch) return setErrorMessage("Your new password does not match. Please check again.");
     if (newPassword === currentPassword) return setErrorMessage("Your current password and new password cannot be the same!");
@@ -144,8 +145,6 @@ const PasswordChangePage = () => {
       clearInput();
       setSuccessfulReset(true);
     }
-    
-    closePasswordChangeDialog();
   }
 
   const passwordsMatch = newPassword === newConfirmPassword;
