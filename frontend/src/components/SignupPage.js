@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import {useState} from "react";
 import axios from "axios";
+import https from 'https';
 import {URL_USER_SVC} from "../configs";
 import {STATUS_CODE_CREATED} from "../constants";
 import { useNavigate, Link } from "react-router-dom";
@@ -61,6 +62,13 @@ const useStyles = createUseStyles({
   }
 })
 
+// To bypass self-signed cert error due to no domain.
+const axiosInstance = axios.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+});
+
 function SignupPage() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -76,7 +84,7 @@ function SignupPage() {
         if (password.length < 5) return setErrorMessage("Your password must be at least 5 characters long.")
         if (!passwordsMatch) return setErrorMessage('Passwords do not match.')
         console.log("post!");
-        const res = await axios.post(URL_USER_SVC + "/signup", { username: username, password: password })
+        const res = await axiosInstance.post(URL_USER_SVC + "/signup", { username: username, password: password })
             .catch((err) => {
                 if (err.response.status !== STATUS_CODE_CREATED) {
                     setErrorMessage(err.response.data.message)

@@ -4,6 +4,7 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import axios from 'axios';
+import https from 'https';
 import {createMatch, deleteMatch } from './controller/match-controller.js';
 import { ormCreateMatch } from './model/match-orm.js';
 
@@ -15,9 +16,15 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.options('*', cors())
 
+const axiosInstance = axios.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+});
+
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Link for frontend client
+    origin: `${process.env.URL_FRONTEND}`, // Link for frontend client
     methods: ["GET", "POST", "DELETE"]
   }
 });
@@ -32,6 +39,9 @@ router.delete('/', (req, res) => deleteMatch(req, res));
 app.use('/api/match', router).all((_, res) => {
     res.setHeader('content-type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', '*')
+    res.setHeader('Access-Control-Allow-Headers', '*')
+    res.setHeader('Access-Control-Expose-Headers', '*')
 })
 
 app.get('/',(_, res) => {
@@ -76,7 +86,7 @@ async function generateQuestionforRoom(token, difficulty, room) {
     difficulty: difficulty
   }
 
-  return axios.get(`${process.env.URL_QUESTION_SVC}/difficulty`, {params})
+  return axiosInstance.get(`${process.env.URL_QUESTION_SVC}/difficulty`, {params})
     .then((res) => res.data.question)
     .then((questions) => questions[Math.floor(Math.random() * questions.length)])
     .then((question) => (room.question = question))

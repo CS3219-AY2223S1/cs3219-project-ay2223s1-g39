@@ -12,6 +12,7 @@ import { createUseStyles } from 'react-jss';
 import { io } from 'socket.io-client';
 import logo from '../assets/logo.png'
 import "../index.css";
+import { URL_MATCHING_SVC } from "../configs";
 
 const useStyles = createUseStyles({
   mainContent: {
@@ -125,7 +126,7 @@ const useStyles = createUseStyles({
   }
 })
 
-const socket = io.connect("http://localhost:8001");
+const socket = io.connect(URL_MATCHING_SVC);
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -140,7 +141,7 @@ const SessionPage = () => {
 
   // this helps to reduce the number of times setState is called, reducing funkiness while typing 
   useEffect(() => {
-    const timeOutId = setTimeout(() => setCode(query), 600);
+    const timeOutId = setTimeout(() => setCode(query), 500);
     return () => clearTimeout(timeOutId);
   }, [query]);
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
 import { useNavigate } from 'react-router-dom';
+import { URL_HISTORY_SVC } from "../configs";
 import {
   Button,
   Dialog,
@@ -55,7 +56,7 @@ const useStyles = createUseStyles({
     borderRadius: "20px",
     backgroundColor: "white",
     boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px",
-    lineHeight: "0.8"
+    lineHeight: "1.3"
   },
   mainContent: {
     display: "flex",
@@ -218,7 +219,7 @@ const HomePage = () => {
       },
       body: JSON.stringify({user: `${user}`})
     }
-    fetch(`http://localhost:8003/api/history?${document.cookie}`, reqConfig)
+    fetch(`${URL_HISTORY_SVC}` + '?' + `${document.cookie}`, reqConfig)
       .then((res) => res.json())
       .then((data) => {
         const dataHistoryByDate = [...data.history].reverse();
