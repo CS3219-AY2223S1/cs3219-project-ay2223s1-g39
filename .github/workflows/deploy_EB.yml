@@ -31,7 +31,7 @@ jobs:
         environment_name: historyservice-prod
         version_label: ${{github.run_number}}
         region: ${{ secrets.AWS_DEFAULT_REGION }}
-        deployment_package: backend/history-service.zip
+        deployment_package: history-service/history-service.zip
 
   deploy-matching-service:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -54,7 +54,7 @@ jobs:
         environment_name: matchingservice-prod
         version_label: ${{github.run_number}}
         region: ${{ secrets.AWS_DEFAULT_REGION }}
-        deployment_package: backend/matching-service.zip
+        deployment_package: matching-service/matching-service.zip
 
 
   deploy-question-service:
@@ -78,7 +78,7 @@ jobs:
         environment_name: questionservice-prod
         version_label: ${{github.run_number}}
         region: ${{ secrets.AWS_DEFAULT_REGION }}
-        deployment_package: backend/question-service.zip
+        deployment_package: question-service/question-service.zip
 
   deploy-user-service:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -101,7 +101,7 @@ jobs:
         environment_name: userservice-prod
         version_label: ${{github.run_number}}
         region: ${{ secrets.AWS_DEFAULT_REGION }}
-        deployment_package: backend/user-service.zip
+        deployment_package: user-service/user-service.zip
 
   deploy-twilio-service:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -111,7 +111,7 @@ jobs:
       uses: actions/checkout@v3
           
     - name: Generate zip package for Twilio Service
-      working-directory: twilio-service
+      working-directory: frontend/src/Twilio
       run: 
         zip -r twilio-service.zip . -x '*.git*'
 
@@ -124,4 +124,4 @@ jobs:
         environment_name: twilioservice-prod
         version_label: ${{github.run_number}}
         region: ${{ secrets.AWS_DEFAULT_REGION }}
-        deployment_package: backend/twilio-service.zip
+        deployment_package: frontend/src/Twilio/twilio-service.zip
