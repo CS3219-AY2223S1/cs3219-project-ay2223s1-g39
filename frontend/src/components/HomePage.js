@@ -56,7 +56,7 @@ const useStyles = createUseStyles({
     borderRadius: "20px",
     backgroundColor: "white",
     boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px",
-    lineHeight: "0.8"
+    lineHeight: "1.3"
   },
   mainContent: {
     display: "flex",
