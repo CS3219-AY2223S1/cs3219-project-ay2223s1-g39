@@ -1,16 +1,19 @@
 name: Deploy to EB
 
 on:
-  push:
+  workflow_run:
+    workflows: [ CI ]
     branches: [ main ]
-  pull_request:
+    types: 
+      - completed
+  push:
     branches: [ main ]
     
 jobs:
   deploy-history-service:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-
     - name: Checkout source code
       uses: actions/checkout@v3
           
@@ -31,9 +34,9 @@ jobs:
         deployment_package: backend/history-service.zip
 
   deploy-matching-service:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-
     - name: Checkout source code
       uses: actions/checkout@v3
           
@@ -55,9 +58,9 @@ jobs:
 
 
   deploy-question-service:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-
     - name: Checkout source code
       uses: actions/checkout@v3
           
@@ -78,10 +81,10 @@ jobs:
         deployment_package: backend/question-service.zip
 
   deploy-user-service:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout source code
-
       uses: actions/checkout@v3
           
     - name: Generate zip package for User Service
@@ -103,7 +106,6 @@ jobs:
   deploy-twilio-service:
     runs-on: ubuntu-latest
     steps:
-
     - name: Checkout source code
       uses: actions/checkout@v3
           
