@@ -2,12 +2,9 @@ name: Deploy to EB
 
 on:
   workflow_run:
-    workflows: [ ci ]
-    branches: [ main ]
+    workflows: [ci]
     types: 
       - completed
-  push:
-    branches: [ main ]
     
 jobs:
   deploy-history-service:
