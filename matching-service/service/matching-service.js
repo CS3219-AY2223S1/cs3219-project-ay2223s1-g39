@@ -17,7 +17,21 @@ export async function createMatch(params) {
   const userTwo = params.userTwo
   const difficulty = params.difficulty
   const question = params.question
-
+  if (userOne.trim() == '') {
+    throw "Invalid username for User One!"
+  }
+  if (userTwo.trim() == '') {
+    throw "Invalid username for User Two!"
+  }
+  if (question.trim() == '') {
+    throw "Invalid question returned!"
+  }
+  if (difficulty.trim() == '') {
+    throw "Invalid difficulty returned!"
+  }
+  if (difficulty != 'easy' && difficulty != 'medium' && difficulty != 'hard') {
+    throw "Unknown difficulty level returned!"
+  }
   let newModel = await matchModel.create({
     userOne: userOne,
     userTwo: userTwo,
@@ -31,6 +45,13 @@ export async function createMatch(params) {
 
 export async function deleteMatch(params) {
   const roomid = params.roomid
-  const removedModel = await matchModel.findOneAndDelete({_id: roomid})
-  return removedModel
+  if (roomid.trim() == '') {
+    throw "Invalid room found!"
+  }
+  const room = await matchModel.findOne({_id: roomid})
+  if (room == null) {
+    throw "No such room found!"
+  }
+  const updatedModel = await matchModel.findOneAndDelete({_id: roomid})
+  return updatedModel
 }

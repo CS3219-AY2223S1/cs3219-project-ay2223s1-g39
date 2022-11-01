@@ -11,13 +11,9 @@ chai.use(chaiHttp);
 chai.should();
 
 describe("Test History Service", function () {
-  const validToken = jwt.sign(
-    { user_id: "123" },
-    process.env.TOKEN_KEY,
-    {
-      expiresIn: "2h",
-    }
-  );
+  const validToken = jwt.sign({ user_id: "123" }, process.env.TOKEN_KEY, {
+    expiresIn: "2h",
+  });
 
   let testHistory = {
     user: "TESTHISTORYSERVICEUSER1",
@@ -35,6 +31,21 @@ describe("Test History Service", function () {
           expect(res.body.message).to.equal("Got history successfully");
           done();
         });
-    });
+    }),
+      it("should return error 400 for invalid user", (done) => {
+        chai
+          .request(index)
+          .post(`/api/history/`)
+          .send({
+            user: ``,
+            token: validToken,
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.a("object");
+            expect(res.body.message).to.equal("Invalid user id!");
+            done();
+          });
+      });
   });
 });
