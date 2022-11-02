@@ -17,13 +17,14 @@ export async function createMatch(params) {
   const userTwo = params.userTwo
   const difficulty = params.difficulty
   const question = params.question
+  const question_id = question._id
   if (userOne.trim() == '') {
     throw "Invalid username for User One!"
   }
   if (userTwo.trim() == '') {
     throw "Invalid username for User Two!"
   }
-  if (question._id.trim() == '') {
+  if (!question) {
     throw "Invalid question returned!"
   }
 
@@ -33,6 +34,7 @@ export async function createMatch(params) {
   if (difficulty != 'easy' && difficulty != 'medium' && difficulty != 'hard') {
     throw "Unknown difficulty level returned!"
   }
+
   let newModel = await matchModel.create({
     userOne: userOne,
     userTwo: userTwo,

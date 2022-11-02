@@ -14,7 +14,27 @@ describe("Test Matching Service", function () {
     userOne: "testMatchingServiceUser1",
     userTwo: "testMatchingServiceUser2",
     difficulty: "medium",
-    question: "Test Sum",
+    question: {
+      _id: '632161e6ee3ba4ab51c2be8d',
+      difficulty: 'medium',
+      title: 'Group Anagrams',
+      question: 'Given an array of strings strs, group the anagrams together. You can return the answer in any order. An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.',
+      examples: [
+        [
+          "Input: strs = ['eat','tea','tan','ate','nat','bat']",
+          "Output: [['bat'],['nat','tan'],['ate','eat','tea']]"
+        ],
+        [ "Input: strs = ['']", "Output: [['']]" ],
+        [ "Input: strs = ['a']", "Output: [['a']]" ]
+      ],
+      constraints: [
+        '1 <= strs.length <= 10^4',
+        '0 <= strs[i].length <= 100',
+        'strs[i] consists of lowercase English letters.'
+      ],
+      createdAt: '2022-09-14T05:08:54.333Z',
+      __v: 0
+    }
   };
 
   describe("Test createMatch function /api/match/", function () {
@@ -75,7 +95,7 @@ describe("Test Matching Service", function () {
             userOne: `${testMatch.userOne}`,
             userTwo: `${testMatch.userTwo}`,
             difficulty: `${testMatch.difficulty}`,
-            question: " ",
+            question: '',
           })
           .end((err, res) => {
             expect(res).to.have.status(400);
