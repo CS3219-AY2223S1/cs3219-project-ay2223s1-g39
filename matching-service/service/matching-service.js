@@ -23,9 +23,10 @@ export async function createMatch(params) {
   if (userTwo.trim() == '') {
     throw "Invalid username for User Two!"
   }
-  if (question.trim() == '') {
+  if (question._id.trim() == '') {
     throw "Invalid question returned!"
   }
+
   if (difficulty.trim() == '') {
     throw "Invalid difficulty returned!"
   }
