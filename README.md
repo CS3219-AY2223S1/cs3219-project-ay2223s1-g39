@@ -1,16 +1,16 @@
 ## Accessing the project via deployment
 As the deployed microservices are not registered with a Public Certificate Authority, they are currently running using Self-Signed Certificates. For the application to work, please follow the steps below.
 1. Access the respective microservices via the urls below:
-- User Service: `To be updated with deployed User-Service URL`
-- Question Service: `To be updated with deployed Question-Service URL`
-- Matching Service: `To be updated with deployed Matching-Service URL`
-- History Service: `To be updated with deployed History-Service URL`
-- Twilio Service: `To be updated with deployed Twilio-Service URL`
+- User Service: `https://userservice-prod.eba-zwpkkbny.ap-southeast-1.elasticbeanstalk.com/api/user` or click [here](https://userservice-prod.eba-zwpkkbny.ap-southeast-1.elasticbeanstalk.com/api/user)
+- Question Service: `https://questionservice-prod.eba-ug263jf3.ap-southeast-1.elasticbeanstalk.com/api/question` or click [here](https://questionservice-prod.eba-ug263jf3.ap-southeast-1.elasticbeanstalk.com/api/question)
+- Matching Service: `https://matchingservice-prod.eba-2etwbb9w.ap-southeast-1.elasticbeanstalk.com/api/match` or click [here](https://matchingservice-prod.eba-2etwbb9w.ap-southeast-1.elasticbeanstalk.com/api/match)
+- History Service: `https://historyservice-prod.eba-hvcsiqpb.ap-southeast-1.elasticbeanstalk.com/api/history` or click [here](https://historyservice-prod.eba-hvcsiqpb.ap-southeast-1.elasticbeanstalk.com/api/history)
+- Twilio Service: `https://twilioservice-prod.eba-vfd4pt2p.ap-southeast-1.elasticbeanstalk.com/` or click [here](https://twilioservice-prod.eba-vfd4pt2p.ap-southeast-1.elasticbeanstalk.com/)
 2. Your browser should display a warning about the site, as shown in the image below.
 ![Browser Warning](readme_images/invalid_cert.png)
 3. Click on `Show advanced`, and select the option to proceed to the url. This would cause the browser to accept the self-signed certificate.
 4. Repeat steps (2) and (3) for the remaining microservices.
-5. Once done, access the deployed application at `https://www.cs3219-peerprep-g39.com`. The application should work as normal.
+5. Once done, access the deployed application at `https://www.cs3219-peerprep-g39.com` or click [here](https://www.cs3219-peerprep-g39.com). The application should work as normal.
 
 ## Running the project locally
 1. Clone the repository to your local device. Please ensure that the `.env` files are cloned.
