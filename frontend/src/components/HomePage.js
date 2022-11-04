@@ -246,12 +246,8 @@ const HomePage = () => {
   const handleSortByChange = (sortBySelected) => {
     setSortHistoryBy(sortBySelected);
     if (sortBySelected === 'date') {
-      console.log("date");
-      console.log(historyByDate);
       setHistory(historyByDate);
     } else if (sortBySelected === 'difficulty') {
-      console.log("diffculty");
-      console.log(historyByDifficulty);
       setHistory(historyByDifficulty);
     } else {
       throw new Error("Unknown sort parameter.")

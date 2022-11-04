@@ -85,7 +85,6 @@ const MatchingPage = () => {
 
     socket.on("matchSuccess", (data) => {
       clearTimeout();
-      console.log(data);
       return navigate('/session', {
         state: {
           roomId: data.roomId, 

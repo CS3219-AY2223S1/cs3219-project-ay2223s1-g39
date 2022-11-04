@@ -83,7 +83,6 @@ function SignupPage() {
     const handleSignup = async () => {
         if (password.length < 5) return setErrorMessage("Your password must be at least 5 characters long.")
         if (!passwordsMatch) return setErrorMessage('Passwords do not match.')
-        console.log("post!");
         const res = await axiosInstance.post(URL_USER_SVC + "/signup", { username: username, password: password })
             .catch((err) => {
                 if (err.response.status !== STATUS_CODE_CREATED) {

@@ -134,7 +134,6 @@ const PasswordChangePage = () => {
     const res = await axiosInstance.put(URL_USER_SVC + "/update-password", reqBody)
       .catch((err) => {
         if (err.response.status !== STATUS_CODE_OK) {
-          console.log(err);
           if (err.response.status === STATUS_CODE_BAD_REQUEST) setErrorMessage("Invalid Credentials! Please check your password again.")
           
           setErrorMessage(err.response.data.message)

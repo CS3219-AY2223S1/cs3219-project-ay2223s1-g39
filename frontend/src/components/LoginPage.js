@@ -62,7 +62,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const classes = useStyles();
-  console.log(state);
 
   const resetAlerts = () => {
     if (state) {
