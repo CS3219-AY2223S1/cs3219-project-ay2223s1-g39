@@ -1,0 +1,125 @@
+name: Deploy to EB
+
+on:
+  workflow_run:
+    workflows: [ci]
+    branches: [ main ]
+    types: 
+      - completed
+    
+jobs:
+  deploy-history-service:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+          
+    - name: Generate zip package for History Service
+      working-directory: history-service
+      run: 
+        zip -r history-service.zip . -x '*.git*'
+
+    - name: Deploy History Service
+      uses: einaregilsson/beanstalk-deploy@v20
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: History Service
+        environment_name: historyservice-prod
+        version_label: ${{github.run_number}}
+        region: ${{ secrets.AWS_DEFAULT_REGION }}
+        deployment_package: history-service/history-service.zip
+
+  deploy-matching-service:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+          
+    - name: Generate zip package for Matching Service
+      working-directory: matching-service
+      run: 
+        zip -r matching-service.zip . -x '*.git*'
+
+    - name: Deploy Matching Service
+      uses: einaregilsson/beanstalk-deploy@v20
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: Matching Service
+        environment_name: matchingservice-prod
+        version_label: ${{github.run_number}}
+        region: ${{ secrets.AWS_DEFAULT_REGION }}
+        deployment_package: matching-service/matching-service.zip
+
+
+  deploy-question-service:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+          
+    - name: Generate zip package for Question Service
+      working-directory: question-service
+      run: 
+        zip -r question-service.zip . -x '*.git*'
+
+    - name: Deploy Question Service
+      uses: einaregilsson/beanstalk-deploy@v20
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: Question Service
+        environment_name: questionservice-prod
+        version_label: ${{github.run_number}}
+        region: ${{ secrets.AWS_DEFAULT_REGION }}
+        deployment_package: question-service/question-service.zip
+
+  deploy-user-service:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+          
+    - name: Generate zip package for User Service
+      working-directory: user-service
+      run: 
+        zip -r user-service.zip . -x '*.git*'
+
+    - name: Deploy User Service
+      uses: einaregilsson/beanstalk-deploy@v20
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: User Service
+        environment_name: userservice-prod
+        version_label: ${{github.run_number}}
+        region: ${{ secrets.AWS_DEFAULT_REGION }}
+        deployment_package: user-service/user-service.zip
+
+  deploy-twilio-service:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+          
+    - name: Generate zip package for Twilio Service
+      working-directory: frontend/src/Twilio
+      run: 
+        zip -r twilio-service.zip . -x '*.git*'
+
+    - name: Deploy Twilio Service
+      uses: einaregilsson/beanstalk-deploy@v20
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: Twilio Service
+        environment_name: twilioservice-prod
+        version_label: ${{github.run_number}}
+        region: ${{ secrets.AWS_DEFAULT_REGION }}
+        deployment_package: frontend/src/Twilio/twilio-service.zip
